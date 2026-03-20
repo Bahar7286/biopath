@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const HF_API_KEY = process.env.HF_API_KEY;
+const HF_API_KEY = process.env.NEXT_PUBLIC_HF_API_KEY;
 const HF_API_URL = 'https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.1/v1/chat/completions';
 
 // Mock cache for demos

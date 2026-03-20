@@ -81,12 +81,12 @@ export default function Home() {
             BioPath Pro
           </motion.div>
           <div className="flex items-center gap-4">
-            <Link href="/login">
+            <Link href="/auth/login">
               <Button variant="ghost" size="sm">
                 Login
               </Button>
             </Link>
-            <Link href="/signup">
+            <Link href="/auth/signup">
               <Button size="sm" className="bg-primary hover:bg-primary/90">
                 Get Started
               </Button>
@@ -122,7 +122,7 @@ export default function Home() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              <Link href="/signup">
+              <Link href="/auth/signup">
                 <Button size="lg" className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-lg">
                   Start Free
                   <ArrowRight className="ml-2 w-5 h-5" />
@@ -247,7 +247,7 @@ export default function Home() {
             <p className="text-xl text-muted-foreground mb-8">
               Join thousands of professionals already using BioPath Pro
             </p>
-            <Link href="/signup">
+            <Link href="/auth/signup">
               <Button size="lg" className="bg-primary hover:bg-primary/90 text-lg">
                 Get Started Free
                 <ArrowRight className="ml-2 w-5 h-5" />
