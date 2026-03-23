@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   LayoutDashboard,
@@ -20,67 +20,38 @@ import { Button } from '@/components/ui/button';
 import { ThemeSwitcher } from '@/components/theme-switcher';
 
 const navigationItems = [
-  {
-    label: 'Overview',
-    href: '/dashboard',
-    icon: LayoutDashboard,
-  },
-  {
-    label: 'Profile',
-    href: '/dashboard/profile',
-    icon: User,
-  },
-  {
-    label: 'Analytics',
-    href: '/dashboard/analytics',
-    icon: BarChart3,
-  },
-  {
-    label: 'Settings',
-    href: '/dashboard/settings',
-    icon: Settings,
-  },
+  { label: 'Genel Bakış', href: '/dashboard', icon: LayoutDashboard },
+  { label: 'Profil', href: '/dashboard/profile', icon: User },
+  { label: 'Analitik', href: '/dashboard/analytics', icon: BarChart3 },
+  { label: 'Ayarlar', href: '/dashboard/settings', icon: Settings },
 ];
 
 const aiFeatures = [
-  {
-    label: 'AI Bio Generator',
-    href: '/dashboard/ai-bio',
-    icon: Sparkles,
-  },
-  {
-    label: 'Roadmap Builder',
-    href: '/dashboard/roadmap',
-    icon: Map,
-  },
+  { label: 'AI Bio Oluşturucu', href: '/dashboard/ai-bio', icon: Sparkles },
+  { label: 'Yol Haritası', href: '/dashboard/roadmap', icon: Map },
 ];
 
-export default function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const isActive = (href: string) => {
-    return pathname === href || pathname.startsWith(href + '/');
+  const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/');
+
+  const handleSignOut = () => {
+    router.push('/auth/login');
   };
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-40 border-b border-border/50 bg-background/95 backdrop-blur-xl">
         <div className="h-16 px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-          {/* Logo */}
           <Link href="/dashboard" className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center">
               <Zap className="w-5 h-5 text-white" />
             </div>
             <span className="hidden sm:inline font-bold text-lg">BioPath Pro</span>
           </Link>
-
-          {/* Right Side */}
           <div className="flex items-center gap-4">
             <ThemeSwitcher />
             <Button
@@ -89,17 +60,12 @@ export default function DashboardLayout({
               onClick={() => setSidebarOpen(!sidebarOpen)}
               className="lg:hidden"
             >
-              {sidebarOpen ? (
-                <X className="w-5 h-5" />
-              ) : (
-                <Menu className="w-5 h-5" />
-              )}
+              {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </Button>
           </div>
         </div>
       </header>
 
-      {/* Sidebar */}
       <AnimatePresence>
         {sidebarOpen && (
           <motion.div
@@ -120,10 +86,9 @@ export default function DashboardLayout({
         className="fixed left-0 top-16 bottom-0 w-64 border-r border-border/50 bg-card lg:translate-x-0 z-30 overflow-y-auto"
       >
         <div className="p-6 space-y-8">
-          {/* Main Navigation */}
           <div className="space-y-2">
             <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3">
-              Main
+              Ana Menü
             </p>
             <nav className="space-y-1">
               {navigationItems.map((item) => {
@@ -135,9 +100,7 @@ export default function DashboardLayout({
                       onClick={() => setSidebarOpen(false)}
                       whileHover={{ x: 4 }}
                       className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-all ${
-                        active
-                          ? 'bg-primary/10 text-primary'
-                          : 'text-muted-foreground hover:bg-secondary/50'
+                        active ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:bg-secondary/50'
                       }`}
                     >
                       <Icon className="w-5 h-5" />
@@ -155,10 +118,9 @@ export default function DashboardLayout({
             </nav>
           </div>
 
-          {/* AI Features */}
           <div className="space-y-2">
             <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3">
-              AI Features
+              Yapay Zeka
             </p>
             <nav className="space-y-1">
               {aiFeatures.map((item) => {
@@ -170,9 +132,7 @@ export default function DashboardLayout({
                       onClick={() => setSidebarOpen(false)}
                       whileHover={{ x: 4 }}
                       className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-all ${
-                        active
-                          ? 'bg-accent/10 text-accent'
-                          : 'text-muted-foreground hover:bg-secondary/50'
+                        active ? 'bg-accent/10 text-accent' : 'text-muted-foreground hover:bg-secondary/50'
                       }`}
                     >
                       <Icon className="w-5 h-5" />
@@ -190,17 +150,20 @@ export default function DashboardLayout({
             </nav>
           </div>
 
-          {/* Actions */}
           <div className="space-y-2 pt-4 border-t border-border/50">
-            <Button variant="outline" size="sm" className="w-full justify-start">
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full justify-start"
+              onClick={handleSignOut}
+            >
               <LogOut className="w-4 h-4 mr-2" />
-              Sign Out
+              Çıkış Yap
             </Button>
           </div>
         </div>
       </motion.aside>
 
-      {/* Main Content */}
       <main className="lg:pl-64 pt-16 min-h-screen">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

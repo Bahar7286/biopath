@@ -30,41 +30,30 @@ export default function SignupPage() {
     setError('');
     setIsLoading(true);
 
-    // Validation
     if (!formData.fullName || !formData.email || !formData.password) {
-      setError('All fields are required');
+      setError('Tüm alanlar zorunludur');
       setIsLoading(false);
       return;
     }
 
     if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
+      setError('Şifreler eşleşmiyor');
       setIsLoading(false);
       return;
     }
 
     if (formData.password.length < 8) {
-      setError('Password must be at least 8 characters');
+      setError('Şifre en az 8 karakter olmalıdır');
       setIsLoading(false);
       return;
     }
 
     try {
-      // TODO: Integrate with Supabase Auth
-      // const { data, error: authError } = await supabase.auth.signUp({
-      //   email: formData.email,
-      //   password: formData.password,
-      //   options: {
-      //     data: { fullName: formData.fullName }
-      //   }
-      // });
-
-      // Temporary redirect for demo
       setTimeout(() => {
         router.push('/dashboard');
       }, 1000);
     } catch (err: any) {
-      setError(err.message || 'An error occurred during signup');
+      setError(err.message || 'Kayıt sırasında bir hata oluştu');
     } finally {
       setIsLoading(false);
     }
@@ -78,7 +67,6 @@ export default function SignupPage() {
         transition={{ duration: 0.6 }}
         className="w-full max-w-md"
       >
-        {/* Header */}
         <div className="mb-8 text-center">
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
@@ -87,16 +75,14 @@ export default function SignupPage() {
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/30 bg-primary/5 mb-4"
           >
             <Sparkles className="w-4 h-4 text-primary" />
-            <span className="text-sm font-medium">Create your profile</span>
+            <span className="text-sm font-medium">Profilinizi oluşturun</span>
           </motion.div>
-
-          <h1 className="text-3xl font-bold mb-2">Get Started</h1>
+          <h1 className="text-3xl font-bold mb-2">Kayıt Ol</h1>
           <p className="text-muted-foreground">
-            Join thousands of professionals building their presence
+            Varlığını oluşturan binlerce profesyonele katılın
           </p>
         </div>
 
-        {/* Form Card */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -104,17 +90,16 @@ export default function SignupPage() {
           className="p-8 rounded-2xl border border-border/50 bg-card shadow-sm space-y-6"
         >
           <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Full Name */}
             <div className="space-y-2">
               <Label htmlFor="fullName" className="text-foreground font-medium">
-                Full Name
+                Ad Soyad
               </Label>
               <div className="relative">
                 <User className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
                 <Input
                   id="fullName"
                   name="fullName"
-                  placeholder="John Doe"
+                  placeholder="Ahmet Yılmaz"
                   value={formData.fullName}
                   onChange={handleChange}
                   className="pl-10 bg-background border-border/50"
@@ -123,10 +108,9 @@ export default function SignupPage() {
               </div>
             </div>
 
-            {/* Email */}
             <div className="space-y-2">
               <Label htmlFor="email" className="text-foreground font-medium">
-                Email Address
+                E-posta Adresi
               </Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
@@ -134,7 +118,7 @@ export default function SignupPage() {
                   id="email"
                   type="email"
                   name="email"
-                  placeholder="you@example.com"
+                  placeholder="siz@ornek.com"
                   value={formData.email}
                   onChange={handleChange}
                   className="pl-10 bg-background border-border/50"
@@ -143,10 +127,9 @@ export default function SignupPage() {
               </div>
             </div>
 
-            {/* Password */}
             <div className="space-y-2">
               <Label htmlFor="password" className="text-foreground font-medium">
-                Password
+                Şifre
               </Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
@@ -163,10 +146,9 @@ export default function SignupPage() {
               </div>
             </div>
 
-            {/* Confirm Password */}
             <div className="space-y-2">
               <Label htmlFor="confirmPassword" className="text-foreground font-medium">
-                Confirm Password
+                Şifre Tekrar
               </Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
@@ -183,7 +165,6 @@ export default function SignupPage() {
               </div>
             </div>
 
-            {/* Error Message */}
             {error && (
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
@@ -194,56 +175,44 @@ export default function SignupPage() {
               </motion.div>
             )}
 
-            {/* Submit Button */}
             <Button
               type="submit"
               disabled={isLoading}
               className="w-full bg-primary hover:bg-primary/90 text-lg h-11 mt-2"
             >
-              {isLoading ? 'Creating Account...' : 'Create Account'}
+              {isLoading ? 'Hesap oluşturuluyor...' : 'Hesap Oluştur'}
               {!isLoading && <ArrowRight className="ml-2 w-5 h-5" />}
             </Button>
           </form>
 
-          {/* Divider */}
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-border/30" />
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-card text-muted-foreground">Or continue with</span>
+              <span className="px-2 bg-card text-muted-foreground">Veya şununla devam et</span>
             </div>
           </div>
 
-          {/* Social Buttons */}
           <div className="grid grid-cols-2 gap-3">
-            <Button
-              variant="outline"
-              className="border-border/50"
-              disabled={isLoading}
-            >
+            <Button variant="outline" className="border-border/50" disabled={isLoading}>
               GitHub
             </Button>
-            <Button
-              variant="outline"
-              className="border-border/50"
-              disabled={isLoading}
-            >
+            <Button variant="outline" className="border-border/50" disabled={isLoading}>
               Google
             </Button>
           </div>
         </motion.div>
 
-        {/* Sign In Link */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
           className="mt-6 text-center text-muted-foreground"
         >
-          Already have an account?{' '}
+          Zaten hesabınız var mı?{' '}
           <Link href="/auth/login" className="text-primary hover:underline font-medium">
-            Sign in
+            Giriş yapın
           </Link>
         </motion.div>
       </motion.div>

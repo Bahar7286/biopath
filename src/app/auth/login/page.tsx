@@ -28,26 +28,18 @@ export default function LoginPage() {
     setError('');
     setIsLoading(true);
 
-    // Validation
     if (!formData.email || !formData.password) {
-      setError('Email and password are required');
+      setError('E-posta ve şifre zorunludur');
       setIsLoading(false);
       return;
     }
 
     try {
-      // TODO: Integrate with Supabase Auth
-      // const { data, error: authError } = await supabase.auth.signInWithPassword({
-      //   email: formData.email,
-      //   password: formData.password,
-      // });
-
-      // Temporary redirect for demo
       setTimeout(() => {
         router.push('/dashboard');
       }, 1000);
     } catch (err: any) {
-      setError(err.message || 'Invalid email or password');
+      setError(err.message || 'Geçersiz e-posta veya şifre');
     } finally {
       setIsLoading(false);
     }
@@ -61,7 +53,6 @@ export default function LoginPage() {
         transition={{ duration: 0.6 }}
         className="w-full max-w-md"
       >
-        {/* Header */}
         <div className="mb-8 text-center">
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
@@ -70,16 +61,14 @@ export default function LoginPage() {
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/30 bg-primary/5 mb-4"
           >
             <Sparkles className="w-4 h-4 text-primary" />
-            <span className="text-sm font-medium">Welcome back</span>
+            <span className="text-sm font-medium">Tekrar hoş geldiniz</span>
           </motion.div>
-
-          <h1 className="text-3xl font-bold mb-2">Sign In</h1>
+          <h1 className="text-3xl font-bold mb-2">Giriş Yap</h1>
           <p className="text-muted-foreground">
-            Access your professional profile and dashboard
+            Profesyonel profilinize ve panonuza erişin
           </p>
         </div>
 
-        {/* Form Card */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -87,10 +76,9 @@ export default function LoginPage() {
           className="p-8 rounded-2xl border border-border/50 bg-card shadow-sm space-y-6"
         >
           <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Email */}
             <div className="space-y-2">
               <Label htmlFor="email" className="text-foreground font-medium">
-                Email Address
+                E-posta Adresi
               </Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
@@ -98,7 +86,7 @@ export default function LoginPage() {
                   id="email"
                   type="email"
                   name="email"
-                  placeholder="you@example.com"
+                  placeholder="siz@ornek.com"
                   value={formData.email}
                   onChange={handleChange}
                   className="pl-10 bg-background border-border/50"
@@ -107,17 +95,13 @@ export default function LoginPage() {
               </div>
             </div>
 
-            {/* Password */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="password" className="text-foreground font-medium">
-                  Password
+                  Şifre
                 </Label>
-                <Link
-                  href="/auth/reset-password"
-                  className="text-sm text-primary hover:underline"
-                >
-                  Forgot?
+                <Link href="/auth/reset-password" className="text-sm text-primary hover:underline">
+                  Unuttum?
                 </Link>
               </div>
               <div className="relative">
@@ -135,7 +119,6 @@ export default function LoginPage() {
               </div>
             </div>
 
-            {/* Error Message */}
             {error && (
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
@@ -146,56 +129,44 @@ export default function LoginPage() {
               </motion.div>
             )}
 
-            {/* Submit Button */}
             <Button
               type="submit"
               disabled={isLoading}
               className="w-full bg-primary hover:bg-primary/90 text-lg h-11 mt-2"
             >
-              {isLoading ? 'Signing in...' : 'Sign In'}
+              {isLoading ? 'Giriş yapılıyor...' : 'Giriş Yap'}
               {!isLoading && <ArrowRight className="ml-2 w-5 h-5" />}
             </Button>
           </form>
 
-          {/* Divider */}
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-border/30" />
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-card text-muted-foreground">Or continue with</span>
+              <span className="px-2 bg-card text-muted-foreground">Veya şununla devam et</span>
             </div>
           </div>
 
-          {/* Social Buttons */}
           <div className="grid grid-cols-2 gap-3">
-            <Button
-              variant="outline"
-              className="border-border/50"
-              disabled={isLoading}
-            >
+            <Button variant="outline" className="border-border/50" disabled={isLoading}>
               GitHub
             </Button>
-            <Button
-              variant="outline"
-              className="border-border/50"
-              disabled={isLoading}
-            >
+            <Button variant="outline" className="border-border/50" disabled={isLoading}>
               Google
             </Button>
           </div>
         </motion.div>
 
-        {/* Sign Up Link */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
           className="mt-6 text-center text-muted-foreground"
         >
-          Don't have an account?{' '}
+          Hesabınız yok mu?{' '}
           <Link href="/auth/signup" className="text-primary hover:underline font-medium">
-            Create one
+            Oluşturun
           </Link>
         </motion.div>
       </motion.div>

@@ -18,33 +18,33 @@ export default function Home() {
   const features = [
     {
       icon: Sparkles,
-      title: 'AI Bio Generator',
-      description: 'Generate 3 unique professional bios with AI. Perfect for every platform.',
+      title: 'AI Bio Oluşturucu',
+      description: 'Yapay zeka ile 3 benzersiz profesyonel bio oluşturun. Her platform için mükemmel.',
     },
     {
       icon: BarChart3,
-      title: 'Smart Analytics',
-      description: 'Track profile views, link clicks, and sharing metrics in real-time.',
+      title: 'Akıllı Analitik',
+      description: 'Profil görüntülemelerini, link tıklamalarını ve paylaşım metriklerini gerçek zamanlı takip edin.',
     },
     {
       icon: Palette,
-      title: '5+ Premium Themes',
-      description: 'Choose from beautiful, professionally designed themes. Switch anytime.',
+      title: '5+ Premium Tema',
+      description: 'Güzel, profesyonelce tasarlanmış temalar arasından seçin. İstediğiniz zaman değiştirin.',
     },
     {
       icon: GitBranch,
-      title: 'GitHub Integration',
-      description: 'Showcase your best projects directly from your GitHub repositories.',
+      title: 'GitHub Entegrasyonu',
+      description: 'En iyi projelerinizi doğrudan GitHub depolarınızdan sergileyin.',
     },
     {
       icon: Zap,
-      title: 'Roadmap Builder',
-      description: 'AI-powered goal planning. Break objectives into actionable tasks.',
+      title: 'Yol Haritası Oluşturucu',
+      description: 'Yapay zeka destekli hedef planlaması. Hedefleri eyleme dönüştürülebilir görevlere bölün.',
     },
     {
       icon: Download,
-      title: 'Export Everything',
-      description: 'Download as PDF, iCal, or VCF. Share your profile anywhere.',
+      title: 'Her Şeyi Dışa Aktar',
+      description: 'PDF, iCal veya VCF olarak indirin. Profilinizi her yerde paylaşın.',
     },
   ];
 
@@ -83,12 +83,12 @@ export default function Home() {
           <div className="flex items-center gap-4">
             <Link href="/auth/login">
               <Button variant="ghost" size="sm">
-                Login
+                Giriş Yap
               </Button>
             </Link>
             <Link href="/auth/signup">
               <Button size="sm" className="bg-primary hover:bg-primary/90">
-                Get Started
+                Başla
               </Button>
             </Link>
           </div>
@@ -106,30 +106,30 @@ export default function Home() {
           >
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/30 bg-primary/5 mb-6">
               <Sparkles className="w-4 h-4 text-primary" />
-              <span className="text-sm font-medium text-primary">AI-Powered Professional Profiles</span>
+              <span className="text-sm font-medium text-primary">Yapay Zeka Destekli Profesyonel Profiller</span>
             </div>
 
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold leading-tight mb-6">
-              Your Professional Profile,{' '}
+              Profesyonel Profiliniz,{' '}
               <span className="bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
-                Supercharged
+                Güçlendirildi
               </span>
             </h1>
 
             <p className="text-xl text-muted-foreground max-w-2xl mb-8">
-              Create a stunning professional profile with AI-generated bios, GitHub integration,
-              smart roadmap planning, and advanced analytics. All in one beautiful platform.
+              Yapay zeka ile oluşturulmuş biyografiler, GitHub entegrasyonu,
+              akıllı yol haritası planlaması ve gelişmiş analitiklerle etkileyici bir profesyonel profil oluşturun.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4">
               <Link href="/auth/signup">
                 <Button size="lg" className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-lg">
-                  Start Free
+                  Ücretsiz Başla
                   <ArrowRight className="ml-2 w-5 h-5" />
                 </Button>
               </Link>
-              <Button variant="outline" size="lg" className="w-full sm:w-auto text-lg">
-                View Demo
+              <Button variant="outline" size="lg" className="w-full sm:w-auto text-lg" onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}>
+                Demo İzle
               </Button>
             </div>
           </motion.div>
@@ -162,7 +162,7 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-secondary/30">
+      <section id="features" className="py-20 px-4 sm:px-6 lg:px-8 bg-secondary/30">
         <div className="max-w-6xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -171,9 +171,9 @@ export default function Home() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl sm:text-5xl font-bold mb-4">Powerful Features</h2>
+            <h2 className="text-4xl sm:text-5xl font-bold mb-4">Güçlü Özellikler</h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Everything you need to build and manage your professional presence
+              Profesyonel varlığınızı oluşturmak ve yönetmek için ihtiyacınız olan her şey
             </p>
           </motion.div>
 
@@ -215,9 +215,9 @@ export default function Home() {
             className="grid md:grid-cols-3 gap-8 text-center"
           >
             {[
-              { value: '1000+', label: 'Active Users' },
-              { value: '50K+', label: 'Profiles Created' },
-              { value: '100%', label: 'Free Forever' },
+              { value: '1000+', label: 'Aktif Kullanıcı' },
+              { value: '50K+', label: 'Oluşturulan Profil' },
+              { value: '100%', label: 'Sonsuza Kadar Ücretsiz' },
             ].map((stat, index) => (
               <motion.div
                 key={index}
@@ -243,13 +243,13 @@ export default function Home() {
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-4xl sm:text-5xl font-bold mb-4">Ready to Level Up?</h2>
+            <h2 className="text-4xl sm:text-5xl font-bold mb-4">Seviye Atlamaya Hazır mısınız?</h2>
             <p className="text-xl text-muted-foreground mb-8">
-              Join thousands of professionals already using BioPath Pro
+              BioPath Pro'yu kullanan binlerce profesyonele katılın
             </p>
             <Link href="/auth/signup">
               <Button size="lg" className="bg-primary hover:bg-primary/90 text-lg">
-                Get Started Free
+                Ücretsiz Başla
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
             </Link>
@@ -264,22 +264,22 @@ export default function Home() {
             <div>
               <p className="font-bold mb-4 text-primary">BioPath Pro</p>
               <p className="text-sm text-muted-foreground">
-                AI-powered professional profiles for everyone.
+                Herkes için yapay zeka destekli profesyonel profiller.
               </p>
             </div>
             {[
-              { title: 'Product', links: ['Features', 'Pricing', 'FAQ'] },
-              { title: 'Company', links: ['About', 'Blog', 'Contact'] },
-              { title: 'Legal', links: ['Privacy', 'Terms', 'Security'] },
+              { title: 'Ürün', links: [{ label: 'Özellikler', href: '/#features' }, { label: 'Fiyatlandırma', href: '/pricing' }, { label: 'SSS', href: '/faq' }] },
+              { title: 'Şirket', links: [{ label: 'Hakkında', href: '/about' }, { label: 'Blog', href: '/blog' }, { label: 'İletişim', href: '/contact' }] },
+              { title: 'Yasal', links: [{ label: 'Gizlilik', href: '/privacy' }, { label: 'Şartlar', href: '/terms' }, { label: 'Güvenlik', href: '/security' }] },
             ].map((col, i) => (
               <div key={i}>
                 <p className="font-semibold mb-4">{col.title}</p>
                 <ul className="space-y-2">
                   {col.links.map((link, j) => (
                     <li key={j}>
-                      <a href="#" className="text-sm text-muted-foreground hover:text-foreground">
-                        {link}
-                      </a>
+                      <Link href={link.href} className="text-sm text-muted-foreground hover:text-foreground">
+                        {link.label}
+                      </Link>
                     </li>
                   ))}
                 </ul>
@@ -288,16 +288,16 @@ export default function Home() {
           </div>
           <div className="border-t border-border/50 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
             <p className="text-sm text-muted-foreground">
-              © 2026 BioPath Pro. All rights reserved.
+              © 2026 BioPath Pro. Tüm hakları saklıdır.
             </p>
             <div className="flex gap-4">
-              <a href="#" className="text-muted-foreground hover:text-foreground text-sm">
+              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground text-sm">
                 Twitter
               </a>
-              <a href="#" className="text-muted-foreground hover:text-foreground text-sm">
+              <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground text-sm">
                 GitHub
               </a>
-              <a href="#" className="text-muted-foreground hover:text-foreground text-sm">
+              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground text-sm">
                 LinkedIn
               </a>
             </div>

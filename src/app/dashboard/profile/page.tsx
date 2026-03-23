@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion } from 'motion/react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -35,16 +35,14 @@ export default function ProfilePage() {
   const [reposError, setReposError] = useState('');
   const [selectedRepos, setSelectedRepos] = useState<number[]>([]);
 
-  const handleFormChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleFetchRepos = async () => {
     if (!formData.githubUsername) {
-      setReposError('Please enter your GitHub username');
+      setReposError('Lütfen GitHub kullanıcı adınızı girin');
       return;
     }
 
@@ -56,7 +54,7 @@ export default function ProfilePage() {
       const fetchedRepos = await fetchUserRepositories(formData.githubUsername, 30);
       setRepos(fetchedRepos);
     } catch (error) {
-      setReposError('Failed to fetch repositories. Please check the username and try again.');
+      setReposError('Depolar getirilemedi. Lütfen kullanıcı adını kontrol edip tekrar deneyin.');
       console.error(error);
     } finally {
       setIsLoadingRepos(false);
@@ -70,83 +68,66 @@ export default function ProfilePage() {
   };
 
   const handleSaveProfile = async () => {
-    // TODO: Integrate with Supabase
-    console.log('Saving profile:', { formData, selectedRepos });
-    alert('Profile saved! (This is a demo)');
+    console.log('Profil kaydediliyor:', { formData, selectedRepos });
+    alert('Profil kaydedildi! (Bu bir demo)');
   };
 
   return (
     <div className="px-4 sm:px-6 lg:px-8 py-8">
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="mb-8"
-      >
-        <h1 className="text-3xl font-bold mb-2">Your Profile</h1>
+      <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
+        <h1 className="text-3xl font-bold mb-2">Profiliniz</h1>
         <p className="text-muted-foreground">
-          Customize your professional profile and showcase your work
+          Profesyonel profilinizi özelleştirin ve çalışmalarınızı sergileyin
         </p>
       </motion.div>
 
       <div className="grid lg:grid-cols-3 gap-8">
-        {/* Profile Information */}
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="lg:col-span-2"
-        >
+        <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="lg:col-span-2">
           <Card className="p-8 border-border/50">
-            <h2 className="text-2xl font-bold mb-6">Basic Information</h2>
-
+            <h2 className="text-2xl font-bold mb-6">Temel Bilgiler</h2>
             <div className="space-y-6">
-              {/* Full Name */}
               <div className="space-y-2">
-                <Label htmlFor="fullName">Full Name</Label>
+                <Label htmlFor="fullName">Ad Soyad</Label>
                 <Input
                   id="fullName"
                   name="fullName"
-                  placeholder="Your full name"
+                  placeholder="Adınız ve soyadınız"
                   value={formData.fullName}
                   onChange={handleFormChange}
                   className="bg-background border-border/50"
                 />
               </div>
 
-              {/* Bio */}
               <div className="space-y-2">
-                <Label htmlFor="bio">Bio</Label>
+                <Label htmlFor="bio">Biyografi</Label>
                 <Textarea
                   id="bio"
                   name="bio"
-                  placeholder="Tell us about yourself"
+                  placeholder="Kendinizden bahsedin"
                   value={formData.bio}
                   onChange={handleFormChange}
                   className="bg-background border-border/50 resize-none h-24"
                 />
               </div>
 
-              {/* Location */}
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="location">Location</Label>
+                  <Label htmlFor="location">Konum</Label>
                   <Input
                     id="location"
                     name="location"
-                    placeholder="City, Country"
+                    placeholder="Şehir, Ülke"
                     value={formData.location}
                     onChange={handleFormChange}
                     className="bg-background border-border/50"
                   />
                 </div>
-
-                {/* Website */}
                 <div className="space-y-2">
-                  <Label htmlFor="website">Website</Label>
+                  <Label htmlFor="website">Web Sitesi</Label>
                   <Input
                     id="website"
                     name="website"
-                    placeholder="https://yourwebsite.com"
+                    placeholder="https://siteniz.com"
                     value={formData.website}
                     onChange={handleFormChange}
                     className="bg-background border-border/50"
@@ -154,22 +135,19 @@ export default function ProfilePage() {
                 </div>
               </div>
 
-              {/* GitHub Integration Section */}
               <div className="pt-6 border-t border-border/50">
                 <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
                   <Github className="w-5 h-5" />
-                  GitHub Integration
+                  GitHub Entegrasyonu
                 </h3>
-
                 <div className="space-y-4">
-                  {/* GitHub Username Input */}
                   <div className="space-y-2">
-                    <Label htmlFor="githubUsername">GitHub Username</Label>
+                    <Label htmlFor="githubUsername">GitHub Kullanıcı Adı</Label>
                     <div className="flex gap-2">
                       <Input
                         id="githubUsername"
                         name="githubUsername"
-                        placeholder="e.g., torvalds"
+                        placeholder="ör. torvalds"
                         value={formData.githubUsername}
                         onChange={handleFormChange}
                         className="flex-1 bg-background border-border/50"
@@ -181,17 +159,15 @@ export default function ProfilePage() {
                         variant="outline"
                         className="border-border/50"
                       >
-                        {isLoadingRepos ? (
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                        ) : (
-                          <Search className="w-4 h-4" />
-                        )}
-                        <span className="ml-2 hidden sm:inline">Fetch</span>
+                        {isLoadingRepos
+                          ? <Loader2 className="w-4 h-4 animate-spin" />
+                          : <Search className="w-4 h-4" />
+                        }
+                        <span className="ml-2 hidden sm:inline">Getir</span>
                       </Button>
                     </div>
                   </div>
 
-                  {/* Error Message */}
                   {reposError && (
                     <motion.div
                       initial={{ opacity: 0 }}
@@ -205,40 +181,33 @@ export default function ProfilePage() {
                 </div>
               </div>
 
-              {/* Save Button */}
               <Button
                 onClick={handleSaveProfile}
                 className="w-full bg-primary hover:bg-primary/90 text-lg h-11 mt-8"
               >
-                Save Profile
+                Profili Kaydet
               </Button>
             </div>
           </Card>
         </motion.div>
 
-        {/* Profile Preview */}
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-        >
+        <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
           <Card className="p-6 border-border/50 sticky top-24">
-            <h3 className="font-semibold mb-4">Preview</h3>
+            <h3 className="font-semibold mb-4">Önizleme</h3>
             <div className="space-y-4">
               <div>
-                <p className="text-xs text-muted-foreground">Name</p>
-                <p className="text-lg font-semibold">
-                  {formData.fullName || 'Your Name'}
-                </p>
+                <p className="text-xs text-muted-foreground">İsim</p>
+                <p className="text-lg font-semibold">{formData.fullName || 'Adınız'}</p>
               </div>
               <div>
-                <p className="text-xs text-muted-foreground">Bio</p>
+                <p className="text-xs text-muted-foreground">Biyografi</p>
                 <p className="text-sm text-foreground">
-                  {formData.bio || 'Your professional bio will appear here'}
+                  {formData.bio || 'Profesyonel biyografiniz burada görünecek'}
                 </p>
               </div>
               {formData.location && (
                 <div>
-                  <p className="text-xs text-muted-foreground">Location</p>
+                  <p className="text-xs text-muted-foreground">Konum</p>
                   <p className="text-sm text-foreground">{formData.location}</p>
                 </div>
               )}
@@ -247,7 +216,6 @@ export default function ProfilePage() {
         </motion.div>
       </div>
 
-      {/* GitHub Repositories Section */}
       {repos.length > 0 && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -257,9 +225,9 @@ export default function ProfilePage() {
         >
           <Card className="p-8 border-border/50">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold">Your Repositories</h2>
+              <h2 className="text-2xl font-bold">Depolarınız</h2>
               <span className="text-sm text-muted-foreground">
-                {selectedRepos.length}/{repos.length} selected
+                {selectedRepos.length}/{repos.length} seçildi
               </span>
             </div>
 
@@ -283,9 +251,7 @@ export default function ProfilePage() {
                       <div className="min-w-0">
                         <h3 className="font-semibold truncate text-sm">{repo.name}</h3>
                         {repo.description && (
-                          <p className="text-xs text-muted-foreground truncate mt-1">
-                            {repo.description}
-                          </p>
+                          <p className="text-xs text-muted-foreground truncate mt-1">{repo.description}</p>
                         )}
                       </div>
                     </div>
@@ -296,12 +262,10 @@ export default function ProfilePage() {
 
                   <div className="flex items-center gap-4 mt-3 pt-3 border-t border-border/30">
                     <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                      <Star className="w-3 h-3" />
-                      {repo.stars}
+                      <Star className="w-3 h-3" />{repo.stars}
                     </div>
                     <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                      <GitFork className="w-3 h-3" />
-                      {repo.forks}
+                      <GitFork className="w-3 h-3" />{repo.forks}
                     </div>
                     {repo.language && (
                       <span className="text-xs px-2 py-1 rounded-full bg-primary/10 text-primary">
@@ -324,7 +288,7 @@ export default function ProfilePage() {
 
             {selectedRepos.length > 0 && (
               <Button className="w-full mt-6 bg-primary hover:bg-primary/90">
-                Add {selectedRepos.length} {selectedRepos.length === 1 ? 'Repository' : 'Repositories'} to Profile
+                {selectedRepos.length} Depoyu Profile Ekle
               </Button>
             )}
           </Card>

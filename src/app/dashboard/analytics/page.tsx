@@ -31,83 +31,53 @@ export default function AnalyticsPage() {
   };
 
   const stats = [
-    {
-      label: 'Profile Views',
-      value: analytics.views,
-      change: '+12%',
-      icon: Eye,
-      color: 'from-blue-500/20 to-blue-600/20',
-    },
-    {
-      label: 'Link Clicks',
-      value: analytics.clicks,
-      change: '+8%',
-      icon: MousePointer,
-      color: 'from-purple-500/20 to-purple-600/20',
-    },
-    {
-      label: 'Profile Shares',
-      value: analytics.shares,
-      change: '+24%',
-      icon: Share2,
-      color: 'from-green-500/20 to-green-600/20',
-    },
-    {
-      label: 'Unique Visitors',
-      value: analytics.visitors,
-      change: '+5%',
-      icon: Users,
-      color: 'from-orange-500/20 to-orange-600/20',
-    },
+    { label: 'Profil Görüntüleme', value: analytics.views, change: '+%12', icon: Eye, color: 'from-blue-500/20 to-blue-600/20' },
+    { label: 'Link Tıklamaları', value: analytics.clicks, change: '+%8', icon: MousePointer, color: 'from-purple-500/20 to-purple-600/20' },
+    { label: 'Profil Paylaşımları', value: analytics.shares, change: '+%24', icon: Share2, color: 'from-green-500/20 to-green-600/20' },
+    { label: 'Tekil Ziyaretçi', value: analytics.visitors, change: '+%5', icon: Users, color: 'from-orange-500/20 to-orange-600/20' },
   ];
 
   const chartData = [
-    { day: 'Mon', views: 120, clicks: 95 },
-    { day: 'Tue', views: 240, clicks: 120 },
-    { day: 'Wed', views: 180, clicks: 98 },
-    { day: 'Thu', views: 280, clicks: 200 },
-    { day: 'Fri', views: 190, clicks: 130 },
-    { day: 'Sat', views: 220, clicks: 110 },
-    { day: 'Sun', views: 150, clicks: 80 },
+    { day: 'Pzt', views: 120, clicks: 95 },
+    { day: 'Sal', views: 240, clicks: 120 },
+    { day: 'Çar', views: 180, clicks: 98 },
+    { day: 'Per', views: 280, clicks: 200 },
+    { day: 'Cum', views: 190, clicks: 130 },
+    { day: 'Cmt', views: 220, clicks: 110 },
+    { day: 'Paz', views: 150, clicks: 80 },
   ];
 
   const recentActivity = [
-    { action: 'Profile viewed', count: 123, time: 'Last 24 hours' },
-    { action: 'Bio clicked', count: 45, time: 'Last 24 hours' },
-    { action: 'Profile shared', count: 12, time: 'Last 24 hours' },
-    { action: 'New follower', count: 8, time: 'Last 24 hours' },
+    { action: 'Profil görüntülendi', count: 123, time: 'Son 24 saat' },
+    { action: 'Bio tıklandı', count: 45, time: 'Son 24 saat' },
+    { action: 'Profil paylaşıldı', count: 12, time: 'Son 24 saat' },
+    { action: 'Yeni takipçi', count: 8, time: 'Son 24 saat' },
   ];
 
   const maxValue = Math.max(...chartData.map(d => d.views));
 
   return (
     <div className="px-4 sm:px-6 lg:px-8 py-8">
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="mb-8"
-      >
+      <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
         <div className="flex items-center justify-between">
           <div>
             <div className="flex items-center gap-3 mb-2">
               <div className="p-2 rounded-lg bg-primary/10">
                 <BarChart3 className="w-6 h-6 text-primary" />
               </div>
-              <h1 className="text-3xl font-bold">Analytics</h1>
+              <h1 className="text-3xl font-bold">Analitik</h1>
             </div>
             <p className="text-muted-foreground">
-              Track your profile performance and engagement metrics
+              Profil performansınızı ve etkileşim metriklerini takip edin
             </p>
           </div>
           <div className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-lg border border-border/50 bg-secondary/30 text-sm text-muted-foreground">
             <Calendar className="w-4 h-4" />
-            Last 7 days
+            Son 7 gün
           </div>
         </div>
       </motion.div>
 
-      {/* Stats Grid */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -117,12 +87,7 @@ export default function AnalyticsPage() {
         {stats.map((stat, index) => {
           const Icon = stat.icon;
           return (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-            >
+            <motion.div key={index} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.1 }}>
               <Card className={`p-6 border-border/50 bg-gradient-to-br ${stat.color}`}>
                 <div className="flex items-start justify-between mb-4">
                   <div className="p-3 rounded-lg bg-background/50">
@@ -133,9 +98,7 @@ export default function AnalyticsPage() {
                     {stat.change}
                   </div>
                 </div>
-                <p className="text-muted-foreground text-sm font-medium mb-1">
-                  {stat.label}
-                </p>
+                <p className="text-muted-foreground text-sm font-medium mb-1">{stat.label}</p>
                 <p className="text-3xl font-bold">{stat.value.toLocaleString()}</p>
               </Card>
             </motion.div>
@@ -144,21 +107,13 @@ export default function AnalyticsPage() {
       </motion.div>
 
       <div className="grid lg:grid-cols-3 gap-8">
-        {/* Charts Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="lg:col-span-2"
-        >
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="lg:col-span-2">
           <Card className="p-8 border-border/50">
-            <h2 className="text-lg font-semibold mb-6">Weekly Traffic</h2>
-            
+            <h2 className="text-lg font-semibold mb-6">Haftalık Trafik</h2>
             <div className="space-y-8">
-              {/* Views Chart */}
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <p className="text-sm font-medium text-muted-foreground">Profile Views</p>
+                  <p className="text-sm font-medium text-muted-foreground">Profil Görüntüleme</p>
                   <p className="text-2xl font-bold text-primary">{analytics.views}</p>
                 </div>
                 <div className="flex items-end justify-between gap-2 h-32">
@@ -177,16 +132,13 @@ export default function AnalyticsPage() {
                   ))}
                 </div>
                 <div className="flex justify-between mt-4 text-xs text-muted-foreground">
-                  {chartData.map((data, index) => (
-                    <span key={index}>{data.day}</span>
-                  ))}
+                  {chartData.map((data, index) => <span key={index}>{data.day}</span>)}
                 </div>
               </div>
 
-              {/* Clicks Chart */}
               <div className="pt-4 border-t border-border/30">
                 <div className="flex items-center justify-between mb-4">
-                  <p className="text-sm font-medium text-muted-foreground">Link Clicks</p>
+                  <p className="text-sm font-medium text-muted-foreground">Link Tıklamaları</p>
                   <p className="text-2xl font-bold text-accent">{analytics.clicks}</p>
                 </div>
                 <div className="flex items-end justify-between gap-2 h-32">
@@ -205,25 +157,16 @@ export default function AnalyticsPage() {
                   ))}
                 </div>
                 <div className="flex justify-between mt-4 text-xs text-muted-foreground">
-                  {chartData.map((data, index) => (
-                    <span key={index}>{data.day}</span>
-                  ))}
+                  {chartData.map((data, index) => <span key={index}>{data.day}</span>)}
                 </div>
               </div>
             </div>
           </Card>
         </motion.div>
 
-        {/* Activity Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="lg:col-span-1"
-        >
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="lg:col-span-1">
           <Card className="p-6 border-border/50 h-full">
-            <h2 className="text-lg font-semibold mb-6">Recent Activity</h2>
-            
+            <h2 className="text-lg font-semibold mb-6">Son Aktiviteler</h2>
             <div className="space-y-4">
               {recentActivity.map((activity, index) => (
                 <motion.div
@@ -242,10 +185,9 @@ export default function AnalyticsPage() {
               ))}
             </div>
 
-            {/* Engagement Rate */}
             <div className="mt-6 pt-6 border-t border-border/30">
               <div className="flex items-center justify-between mb-3">
-                <p className="text-sm font-medium">Engagement Rate</p>
+                <p className="text-sm font-medium">Etkileşim Oranı</p>
                 <span className="text-2xl font-bold text-primary">{analytics.engagement}%</span>
               </div>
               <div className="w-full h-2 rounded-full bg-secondary/50 overflow-hidden">
@@ -257,31 +199,25 @@ export default function AnalyticsPage() {
                 />
               </div>
               <p className="text-xs text-muted-foreground mt-2">
-                Strong engagement! Keep it up 🎉
+                Harika etkileşim! Böyle devam edin 🎉
               </p>
             </div>
           </Card>
         </motion.div>
       </div>
 
-      {/* Insights */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4 }}
-        className="mt-8"
-      >
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="mt-8">
         <Card className="p-6 border-border/50 bg-gradient-to-r from-primary/10 to-accent/10">
           <div className="flex items-start gap-4">
             <div className="p-3 rounded-lg bg-primary/20">
               <TrendingUp className="w-6 h-6 text-primary" />
             </div>
             <div>
-              <h3 className="font-semibold mb-2">Performance Insights</h3>
+              <h3 className="font-semibold mb-2">Performans Öngörüleri</h3>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>✓ Your profile is performing 28% better than average users</li>
-                <li>✓ Thursday had the highest engagement - consider more posts that day</li>
-                <li>✓ Your bio generates 67% of all clicks - make it even more compelling</li>
+                <li>✓ Profiliniz ortalama kullanıcılardan %28 daha iyi performans gösteriyor</li>
+                <li>✓ Perşembe en yüksek etkileşimi yaşadı — o gün daha fazla içerik paylaşmayı deneyin</li>
+                <li>✓ Bio'nuz tüm tıklamaların %67'sini oluşturuyor — daha da çekici hale getirin</li>
               </ul>
             </div>
           </div>
