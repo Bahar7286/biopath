@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import Link from 'next/link';
+import { ChevronLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ChevronDown, HelpCircle } from 'lucide-react';
 
@@ -23,9 +24,15 @@ export default function FaqPage() {
     <div className="min-h-screen bg-background text-foreground">
       <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border/50 backdrop-blur-xl bg-background/95">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <Link href="/" className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-            BioPath Pro
-          </Link>
+          <div className="flex items-center gap-4">
+            <Link href="/" className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors group">
+              <ChevronLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
+              Geri
+            </Link>
+            <Link href="/" className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              BioPath Pro
+            </Link>
+          </div>
           <div className="flex items-center gap-4">
             <Link href="/auth/login"><Button variant="ghost" size="sm">Giriş Yap</Button></Link>
             <Link href="/auth/signup"><Button size="sm" className="bg-primary hover:bg-primary/90">Başla</Button></Link>
