@@ -8,7 +8,7 @@ import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Palette, Settings, Bell, Lock, Eye, CheckCircle2, Copy, Share2, Download } from 'lucide-react';
-import { exportToPDF, exportToVCF } from '@/lib/export';
+
 
 interface Theme {
   id: string;
@@ -68,10 +68,12 @@ export default function SettingsPage() {
   };
 
   const handleExportPDF = async () => {
+    const { exportToPDF } = await import('@/lib/export');
     await exportToPDF(demoProfile, 'profil.pdf');
   };
 
-  const handleExportVCF = () => {
+  const handleExportVCF = async () => {
+    const { exportToVCF } = await import('@/lib/export');
     exportToVCF(demoProfile, 'profil.vcf');
   };
 
