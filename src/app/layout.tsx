@@ -22,8 +22,18 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Web App",
-  description: "Co-created with Raccoon AI",
+  title: {
+    default: "BioPath Pro",
+    template: "%s | BioPath Pro",
+  },
+  description: "Yapay zeka destekli profesyonel profil platformu. AI bio oluşturucu, GitHub entegrasyonu, akıllı yol haritası ve gelişmiş analitik.",
+  keywords: ["profesyonel profil", "AI bio", "GitHub entegrasyonu", "yol haritası", "analitik"],
+  authors: [{ name: "BioPath Pro" }],
+  openGraph: {
+    title: "BioPath Pro",
+    description: "Yapay zeka ile profesyonel profilinizi güçlendirin.",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
@@ -32,7 +42,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="tr" suppressHydrationWarning>
       <body
         className={`${dmSans.variable} ${plusJakarta.variable} ${jetbrainsMono.variable} antialiased`}
       >
