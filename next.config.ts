@@ -10,15 +10,6 @@ const nextConfig: NextConfig = {
     ],
   },
   trailingSlash: false,
-  experimental: {
-    turbo: {
-      resolveAlias: {
-        // Server tarafında bu paketleri boş modülle değiştir
-        'fflate/lib/node.cjs': './src/lib/empty.ts',
-        'fflate': './src/lib/empty.ts',
-      },
-    },
-  },
 };
 
 export default nextConfig;
