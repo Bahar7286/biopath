@@ -14,19 +14,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import {
-  Sparkles,
-  Copy,
-  ThumbsUp,
-  RefreshCw,
-  Zap,
-  CheckCircle2,
-} from 'lucide-react';
+import { Sparkles, Copy, ThumbsUp, RefreshCw, Zap, CheckCircle2 } from 'lucide-react';
 
 const TONE_OPTIONS = [
-  { value: 'professional', label: 'Professional' },
-  { value: 'casual', label: 'Casual & Friendly' },
-  { value: 'creative', label: 'Creative & Unique' },
+  { value: 'professional', label: 'Profesyonel' },
+  { value: 'casual', label: 'Samimi & Dostane' },
+  { value: 'creative', label: 'Yaratıcı & Özgün' },
 ];
 
 interface GeneratedBio {
@@ -41,7 +34,7 @@ export default function AiBioPage() {
   const [formData, setFormData] = useState({
     profession: '',
     skills: '',
-    experience: '5 years',
+    experience: '5 yıl',
     tone: 'professional' as const,
   });
 
@@ -49,9 +42,7 @@ export default function AiBioPage() {
   const [bios, setBios] = useState<GeneratedBio[]>([]);
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
@@ -62,18 +53,17 @@ export default function AiBioPage() {
 
   const handleGenerate = async () => {
     if (!formData.profession) {
-      alert('Please enter your profession');
+      alert('Lütfen mesleğinizi girin');
       return;
     }
 
     setIsLoading(true);
 
     try {
-      // Simulate API call - replace with actual Hugging Face API call
       const mockBios = [
-        `Passionate ${formData.profession} with ${formData.experience} of experience. Specialized in creating innovative solutions. ${formData.skills ? `Expertise in ${formData.skills}.` : ''}`,
-        `Experienced ${formData.profession} dedicated to excellence and continuous growth. ${formData.skills ? `Strong background in ${formData.skills}.` : ''} Always eager to tackle new challenges.`,
-        `Creative ${formData.profession} combining technical expertise with strategic thinking. ${formData.skills ? `Proficient in ${formData.skills}.` : ''} Passionate about delivering exceptional results.`,
+        `${formData.experience} deneyime sahip tutkulu bir ${formData.profession}. Yenilikçi çözümler üretme konusunda uzmanlaşmış.${formData.skills ? ` ${formData.skills} alanlarında uzmanlık.` : ''}`,
+        `Mükemmelliğe ve sürekli gelişime adanmış deneyimli bir ${formData.profession}.${formData.skills ? ` ${formData.skills} konusunda güçlü bir altyapıya sahip.` : ''} Yeni zorluklarla yüzleşmeye her zaman hazır.`,
+        `Teknik uzmanlığı stratejik düşünceyle birleştiren yaratıcı bir ${formData.profession}.${formData.skills ? ` ${formData.skills} konusunda yetkin.` : ''} Olağanüstü sonuçlar üretme konusunda tutkulu.`,
       ];
 
       await new Promise(resolve => setTimeout(resolve, 1500));
@@ -88,8 +78,8 @@ export default function AiBioPage() {
 
       setBios([...newBios, ...bios]);
     } catch (error) {
-      console.error('Error generating bios:', error);
-      alert('Failed to generate bios. Please try again.');
+      console.error('Bio oluşturma hatası:', error);
+      alert('Bio oluşturulamadı. Lütfen tekrar deneyin.');
     } finally {
       setIsLoading(false);
     }
@@ -102,50 +92,39 @@ export default function AiBioPage() {
   };
 
   const handleLike = (id: string) => {
-    setBios(prevBios =>
-      prevBios.map(bio =>
-        bio.id === id ? { ...bio, liked: !bio.liked } : bio
-      )
-    );
+    setBios(prevBios => prevBios.map(bio => bio.id === id ? { ...bio, liked: !bio.liked } : bio));
+  };
+
+  const toneLabel = (tone: string) => {
+    const found = TONE_OPTIONS.find(o => o.value === tone);
+    return found ? found.label : tone;
   };
 
   return (
     <div className="px-4 sm:px-6 lg:px-8 py-8">
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="mb-8"
-      >
+      <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
         <div className="flex items-center gap-3 mb-2">
           <div className="p-2 rounded-lg bg-accent/10">
             <Sparkles className="w-6 h-6 text-accent" />
           </div>
-          <h1 className="text-3xl font-bold">AI Bio Generator</h1>
+          <h1 className="text-3xl font-bold">AI Bio Oluşturucu</h1>
         </div>
         <p className="text-muted-foreground">
-          Generate 3 unique professional bios powered by AI. Perfect for every platform.
+          Yapay zeka ile 3 benzersiz profesyonel bio oluşturun. Her platform için mükemmel.
         </p>
       </motion.div>
 
       <div className="grid lg:grid-cols-3 gap-8">
-        {/* Generator Form */}
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="lg:col-span-1"
-        >
+        <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="lg:col-span-1">
           <Card className="p-6 border-border/50 sticky top-24">
-            <h2 className="text-lg font-semibold mb-6">Tell Us About You</h2>
-
+            <h2 className="text-lg font-semibold mb-6">Kendinizi Tanıtın</h2>
             <div className="space-y-5">
-              {/* Profession */}
               <div className="space-y-2">
-                <Label htmlFor="profession">Profession *</Label>
+                <Label htmlFor="profession">Meslek *</Label>
                 <Input
                   id="profession"
                   name="profession"
-                  placeholder="e.g., Software Engineer"
+                  placeholder="ör. Yazılım Mühendisi"
                   value={formData.profession}
                   onChange={handleChange}
                   disabled={isLoading}
@@ -153,13 +132,12 @@ export default function AiBioPage() {
                 />
               </div>
 
-              {/* Skills */}
               <div className="space-y-2">
-                <Label htmlFor="skills">Skills (comma-separated)</Label>
+                <Label htmlFor="skills">Beceriler (virgülle ayırın)</Label>
                 <Textarea
                   id="skills"
                   name="skills"
-                  placeholder="e.g., React, Node.js, Python"
+                  placeholder="ör. React, Node.js, Python"
                   value={formData.skills}
                   onChange={handleChange}
                   disabled={isLoading}
@@ -167,13 +145,12 @@ export default function AiBioPage() {
                 />
               </div>
 
-              {/* Experience */}
               <div className="space-y-2">
-                <Label htmlFor="experience">Experience Level</Label>
+                <Label htmlFor="experience">Deneyim Seviyesi</Label>
                 <Input
                   id="experience"
                   name="experience"
-                  placeholder="e.g., 5 years"
+                  placeholder="ör. 5 yıl"
                   value={formData.experience}
                   onChange={handleChange}
                   disabled={isLoading}
@@ -181,9 +158,8 @@ export default function AiBioPage() {
                 />
               </div>
 
-              {/* Tone */}
               <div className="space-y-2">
-                <Label htmlFor="tone">Tone</Label>
+                <Label htmlFor="tone">Ton</Label>
                 <Select value={formData.tone} onValueChange={handleToneChange}>
                   <SelectTrigger className="bg-background border-border/50">
                     <SelectValue />
@@ -198,54 +174,36 @@ export default function AiBioPage() {
                 </Select>
               </div>
 
-              {/* Generate Button */}
               <Button
                 onClick={handleGenerate}
                 disabled={isLoading}
                 className="w-full bg-accent hover:bg-accent/90 mt-6"
               >
                 {isLoading ? (
-                  <>
-                    <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
-                    Generating...
-                  </>
+                  <><RefreshCw className="w-4 h-4 mr-2 animate-spin" />Oluşturuluyor...</>
                 ) : (
-                  <>
-                    <Sparkles className="w-4 h-4 mr-2" />
-                    Generate Bios
-                  </>
+                  <><Sparkles className="w-4 h-4 mr-2" />Bio Oluştur</>
                 )}
               </Button>
 
-              {/* Info */}
               <div className="p-3 rounded-lg bg-primary/5 border border-primary/20">
                 <p className="text-xs text-muted-foreground">
-                  💡 We'll generate 3 unique bios in different tones. You can copy any of them
-                  to your profile!
+                  💡 Farklı tonlarda 3 benzersiz bio oluşturacağız. İstediğinizi profilinize kopyalayabilirsiniz!
                 </p>
               </div>
             </div>
           </Card>
         </motion.div>
 
-        {/* Generated Bios */}
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="lg:col-span-2"
-        >
+        <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="lg:col-span-2">
           {bios.length === 0 ? (
             <Card className="p-12 border-border/50 text-center">
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                className="mb-4 inline-flex p-4 rounded-full bg-primary/10"
-              >
+              <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="mb-4 inline-flex p-4 rounded-full bg-primary/10">
                 <Zap className="w-8 h-8 text-primary" />
               </motion.div>
-              <h3 className="text-lg font-semibold mb-2">No bios generated yet</h3>
+              <h3 className="text-lg font-semibold mb-2">Henüz bio oluşturulmadı</h3>
               <p className="text-muted-foreground">
-                Fill in your details and click "Generate Bios" to get started
+                Bilgilerinizi doldurun ve başlamak için "Bio Oluştur"a tıklayın
               </p>
             </Card>
           ) : (
@@ -258,19 +216,14 @@ export default function AiBioPage() {
                   transition={{ delay: index * 0.1 }}
                 >
                   <Card className="p-6 border-border/50 hover:border-accent/50 transition-all group">
-                    {/* Header */}
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex items-center gap-2">
                         <div className="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center">
                           <span className="text-sm font-bold text-accent">{index + 1}</span>
                         </div>
                         <div>
-                          <p className="text-sm font-medium capitalize">
-                            {bio.tone} Tone
-                          </p>
-                          <p className="text-xs text-muted-foreground">
-                            {bio.timestamp.toLocaleTimeString()}
-                          </p>
+                          <p className="text-sm font-medium">{toneLabel(bio.tone)}</p>
+                          <p className="text-xs text-muted-foreground">{bio.timestamp.toLocaleTimeString('tr-TR')}</p>
                         </div>
                       </div>
                       <motion.button
@@ -279,18 +232,12 @@ export default function AiBioPage() {
                         onClick={() => handleLike(bio.id)}
                         className="p-2 hover:bg-primary/10 rounded-lg transition-colors"
                       >
-                        <ThumbsUp
-                          className={`w-5 h-5 ${
-                            bio.liked ? 'fill-primary text-primary' : 'text-muted-foreground'
-                          }`}
-                        />
+                        <ThumbsUp className={`w-5 h-5 ${bio.liked ? 'fill-primary text-primary' : 'text-muted-foreground'}`} />
                       </motion.button>
                     </div>
 
-                    {/* Bio Text */}
                     <p className="text-foreground mb-4 leading-relaxed">{bio.text}</p>
 
-                    {/* Actions */}
                     <div className="flex items-center gap-2 pt-4 border-t border-border/30">
                       <motion.button
                         whileHover={{ scale: 1.05 }}
@@ -299,19 +246,13 @@ export default function AiBioPage() {
                         className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary/10 hover:bg-primary/20 text-primary text-sm font-medium transition-colors"
                       >
                         {copiedId === bio.id ? (
-                          <>
-                            <CheckCircle2 className="w-4 h-4" />
-                            Copied!
-                          </>
+                          <><CheckCircle2 className="w-4 h-4" />Kopyalandı!</>
                         ) : (
-                          <>
-                            <Copy className="w-4 h-4" />
-                            Copy
-                          </>
+                          <><Copy className="w-4 h-4" />Kopyala</>
                         )}
                       </motion.button>
                       <span className="text-xs text-muted-foreground ml-auto">
-                        {bio.text.length} characters
+                        {bio.text.length} karakter
                       </span>
                     </div>
                   </Card>

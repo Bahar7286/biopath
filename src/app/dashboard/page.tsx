@@ -16,36 +16,36 @@ import {
 
 export default function DashboardPage() {
   const stats = [
-    { label: 'Profile Views', value: '1,234', icon: BarChart3 },
-    { label: 'Link Clicks', value: '589', icon: LinkIcon },
-    { label: 'Share Count', value: '128', icon: Sparkles },
+    { label: 'Profil Görüntüleme', value: '1.234', icon: BarChart3 },
+    { label: 'Link Tıklamaları', value: '589', icon: LinkIcon },
+    { label: 'Paylaşım Sayısı', value: '128', icon: Sparkles },
   ];
 
   const quickActions = [
     {
-      title: 'Generate AI Bio',
-      description: 'Create professional bios with AI',
+      title: 'AI Bio Oluştur',
+      description: 'Yapay zeka ile profesyonel bio yaz',
       icon: Sparkles,
       href: '/dashboard/ai-bio',
       color: 'from-primary/20 to-accent/20',
     },
     {
-      title: 'Build Roadmap',
-      description: 'Plan your goals with AI',
+      title: 'Yol Haritası Oluştur',
+      description: 'Hedeflerini yapay zeka ile planla',
       icon: Map,
       href: '/dashboard/roadmap',
       color: 'from-accent/20 to-primary/20',
     },
     {
-      title: 'Change Theme',
-      description: 'Choose from 5+ themes',
+      title: 'Temayı Değiştir',
+      description: '5+ tema arasından seç',
       icon: Palette,
       href: '/dashboard/settings',
       color: 'from-secondary/20 to-primary/20',
     },
     {
-      title: 'GitHub Projects',
-      description: 'Showcase your work',
+      title: 'GitHub Projeleri',
+      description: 'Çalışmalarını sergile',
       icon: Github,
       href: '/dashboard/profile',
       color: 'from-primary/20 to-secondary/20',
@@ -53,27 +53,25 @@ export default function DashboardPage() {
   ];
 
   const recentActivity = [
-    { title: 'Profile view from Twitter', time: '2 hours ago' },
-    { title: 'New follower: @devjohn', time: '5 hours ago' },
-    { title: 'Bio generated successfully', time: '1 day ago' },
-    { title: 'Profile shared 5 times', time: '2 days ago' },
+    { title: "Twitter'dan profil görüntüleme", time: '2 saat önce' },
+    { title: 'Yeni takipçi: @devjohn', time: '5 saat önce' },
+    { title: 'Bio başarıyla oluşturuldu', time: '1 gün önce' },
+    { title: 'Profil 5 kez paylaşıldı', time: '2 gün önce' },
   ];
 
   return (
     <div className="px-4 sm:px-6 lg:px-8 py-8">
-      {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         className="mb-8"
       >
-        <h1 className="text-3xl font-bold mb-2">Welcome back!</h1>
+        <h1 className="text-3xl font-bold mb-2">Tekrar hoş geldiniz!</h1>
         <p className="text-muted-foreground">
-          Manage your professional profile and track your progress
+          Profesyonel profilinizi yönetin ve ilerlemenizi takip edin
         </p>
       </motion.div>
 
-      {/* Stats Grid */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -92,21 +90,20 @@ export default function DashboardPage() {
                   </div>
                 </div>
                 <p className="text-3xl font-bold">{stat.value}</p>
-                <p className="text-xs text-muted-foreground mt-1">+12% from last week</p>
+                <p className="text-xs text-muted-foreground mt-1">Geçen haftaya göre +%12</p>
               </Card>
             </motion.div>
           );
         })}
       </motion.div>
 
-      {/* Quick Actions */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
         className="mb-8"
       >
-        <h2 className="text-2xl font-bold mb-4">Quick Actions</h2>
+        <h2 className="text-2xl font-bold mb-4">Hızlı İşlemler</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
           {quickActions.map((action, index) => {
             const Icon = action.icon;
@@ -127,7 +124,7 @@ export default function DashboardPage() {
                   <h3 className="font-semibold mb-1">{action.title}</h3>
                   <p className="text-xs text-muted-foreground mb-4">{action.description}</p>
                   <div className="flex items-center text-xs text-primary font-medium">
-                    Get started
+                    Başla
                     <ArrowRight className="w-3 h-3 ml-1 group-hover:translate-x-1 transition-transform" />
                   </div>
                 </motion.div>
@@ -137,9 +134,7 @@ export default function DashboardPage() {
         </div>
       </motion.div>
 
-      {/* Main Content Grid */}
       <div className="grid lg:grid-cols-3 gap-8">
-        {/* Recent Activity */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -147,7 +142,7 @@ export default function DashboardPage() {
           className="lg:col-span-2"
         >
           <Card className="p-6 border-border/50">
-            <h2 className="text-lg font-semibold mb-4">Recent Activity</h2>
+            <h2 className="text-lg font-semibold mb-4">Son Aktiviteler</h2>
             <div className="space-y-4">
               {recentActivity.map((activity, index) => (
                 <motion.div
@@ -171,46 +166,41 @@ export default function DashboardPage() {
           </Card>
         </motion.div>
 
-        {/* Getting Started */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
         >
           <Card className="p-6 border-border/50 bg-gradient-to-br from-primary/10 to-accent/10">
-            <h2 className="text-lg font-semibold mb-4">Getting Started</h2>
+            <h2 className="text-lg font-semibold mb-4">Başlangıç Rehberi</h2>
             <div className="space-y-4">
               <div className="flex gap-3">
-                <div className="flex-shrink-0 w-6 h-6 rounded-full bg-primary flex items-center justify-center text-white text-xs font-bold">
-                  1
-                </div>
+                <div className="flex-shrink-0 w-6 h-6 rounded-full bg-primary flex items-center justify-center text-white text-xs font-bold">1</div>
                 <div>
-                  <p className="text-sm font-medium">Complete Your Profile</p>
-                  <p className="text-xs text-muted-foreground">Add your bio and photo</p>
+                  <p className="text-sm font-medium">Profilini Tamamla</p>
+                  <p className="text-xs text-muted-foreground">Bio ve fotoğraf ekle</p>
                 </div>
               </div>
               <div className="flex gap-3">
-                <div className="flex-shrink-0 w-6 h-6 rounded-full bg-primary flex items-center justify-center text-white text-xs font-bold">
-                  2
-                </div>
+                <div className="flex-shrink-0 w-6 h-6 rounded-full bg-primary flex items-center justify-center text-white text-xs font-bold">2</div>
                 <div>
-                  <p className="text-sm font-medium">Generate AI Bio</p>
-                  <p className="text-xs text-muted-foreground">Let AI create your bio</p>
+                  <p className="text-sm font-medium">AI Bio Oluştur</p>
+                  <p className="text-xs text-muted-foreground">Yapay zeka bio'nı yazsın</p>
                 </div>
               </div>
               <div className="flex gap-3">
-                <div className="flex-shrink-0 w-6 h-6 rounded-full bg-primary flex items-center justify-center text-white text-xs font-bold">
-                  3
-                </div>
+                <div className="flex-shrink-0 w-6 h-6 rounded-full bg-primary flex items-center justify-center text-white text-xs font-bold">3</div>
                 <div>
-                  <p className="text-sm font-medium">Share Your Profile</p>
-                  <p className="text-xs text-muted-foreground">Get the public link</p>
+                  <p className="text-sm font-medium">Profili Paylaş</p>
+                  <p className="text-xs text-muted-foreground">Genel bağlantını al</p>
                 </div>
               </div>
             </div>
-            <Button className="w-full mt-6 bg-primary hover:bg-primary/90">
-              Start Guide
-            </Button>
+            <Link href="/dashboard/profile">
+              <Button className="w-full mt-6 bg-primary hover:bg-primary/90">
+                Rehberi Başlat
+              </Button>
+            </Link>
           </Card>
         </motion.div>
       </div>

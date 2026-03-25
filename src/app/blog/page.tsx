@@ -2,96 +2,71 @@
 
 import { motion } from 'motion/react';
 import Link from 'next/link';
-import { PageHeader } from '@/components/shared/page-header';
-import { Footer } from '@/components/shared/footer';
-import { ArrowRight, Calendar, User } from 'lucide-react';
-
-const blogPosts = [
-  {
-    id: 'ai-bio-tips',
-    slug: 'ai-bio-tips',
-    title: 'Profesyonel Bio Yazmanın 5 İpucu',
-    excerpt: 'AI yardımıyla etkileyici bir bio yazmanın sırlarını keşfedin.',
-    date: '2024-03-20',
-    author: 'BioPath Team',
-    image: '📝',
-  },
-  {
-    id: 'github-showcase',
-    slug: 'github-showcase',
-    title: 'GitHub Depo Sergileme - En İyi Uygulamalar',
-    excerpt: 'Projelerinizi en iyi şekilde sergilemek için ipuçları ve stratejiler.',
-    date: '2024-03-18',
-    author: 'Teknoloji Editörü',
-    image: '🚀',
-  },
-  {
-    id: 'theme-customization',
-    slug: 'theme-customization',
-    title: 'Tema Özelleştirmesi - Kişiselleştirilmiş Stil Rehberi',
-    excerpt: 'Profilinizi kendi tarzınıza göre özelleştirmenin tüm yollarını öğrenin.',
-    date: '2024-03-15',
-    author: 'Tasarım Uzmanı',
-    image: '🎨',
-  },
-];
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { BookOpen, ArrowRight, ChevronLeft } from 'lucide-react';
+import { blogPosts, categoryColors } from '@/lib/blog-posts';
 
 export default function BlogPage() {
   return (
-    <>
-      <PageHeader 
-        title="Blog"
-        description="Profesyonel profil oluşturma hakkında ipuçları ve stratejiler"
-        showBack={false}
-      />
-      
-      <main className="flex-1 container mx-auto px-4 sm:px-6 py-12">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-        >
-          {blogPosts.map((post, idx) => (
-            <motion.div
-              key={post.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: idx * 0.1 }}
-              whileHover={{ y: -4 }}
-              className="group cursor-pointer"
-            >
-              <Link href={`/blog/${post.slug}`}>
-                <div className="h-full rounded-lg border border-border/40 bg-card hover:border-primary/40 overflow-hidden transition-all duration-300">
-                  <div className="p-6 space-y-4">
-                    <div className="text-4xl">{post.image}</div>
-                    <div className="space-y-2">
-                      <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
-                        {post.title}
-                      </h3>
-                      <p className="text-sm text-muted-foreground">{post.excerpt}</p>
+    <div className="min-h-screen bg-background text-foreground">
+      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border/50 backdrop-blur-xl bg-background/95">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Link href="/" className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors group">
+              <ChevronLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
+              Geri
+            </Link>
+            <Link href="/" className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              BioPath Pro
+            </Link>
+          </div>
+          <div className="flex items-center gap-4">
+            <Link href="/auth/login"><Button variant="ghost" size="sm">Giriş Yap</Button></Link>
+            <Link href="/auth/signup"><Button size="sm" className="bg-primary hover:bg-primary/90">Başla</Button></Link>
+          </div>
+        </div>
+      </nav>
+
+      <main className="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/30 bg-primary/5 mb-6">
+              <BookOpen className="w-4 h-4 text-primary" />
+              <span className="text-sm font-medium text-primary">Blog</span>
+            </div>
+            <h1 className="text-5xl font-bold mb-4">Son Yazılar</h1>
+            <p className="text-xl text-muted-foreground">Kariyer, teknoloji ve profesyonel kimlik üzerine içerikler.</p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            {blogPosts.map((post, i) => (
+              <motion.div key={post.slug} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}>
+                <Link href={`/blog/${post.slug}`} className="block h-full">
+                  <Card className="p-6 border-border/50 hover:border-primary/50 transition-all group cursor-pointer h-full flex flex-col">
+                    <div className="flex items-center gap-2 mb-4">
+                      <span className={`text-xs font-medium px-2 py-1 rounded-full ${categoryColors[post.category] || 'bg-primary/10 text-primary'}`}>
+                        {post.category}
+                      </span>
+                      <span className="text-xs text-muted-foreground">{post.readTime}</span>
                     </div>
-                    <div className="flex items-center justify-between text-xs text-muted-foreground pt-4 border-t border-border/40">
-                      <div className="flex items-center gap-1">
-                        <Calendar className="h-3 w-3" />
-                        <span>{new Date(post.date).toLocaleDateString('tr-TR')}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <User className="h-3 w-3" />
-                        <span>{post.author}</span>
-                      </div>
+                    <h2 className="text-lg font-bold mb-3 group-hover:text-primary transition-colors leading-snug">
+                      {post.title}
+                    </h2>
+                    <p className="text-muted-foreground text-sm leading-relaxed flex-1 mb-4">{post.excerpt}</p>
+                    <div className="flex items-center justify-between pt-4 border-t border-border/30">
+                      <span className="text-xs text-muted-foreground">{post.date}</span>
+                      <span className="text-xs text-primary font-medium flex items-center gap-1 group-hover:gap-2 transition-all">
+                        Devamını Oku <ArrowRight className="w-3 h-3" />
+                      </span>
                     </div>
-                    <div className="flex items-center gap-1 text-primary text-sm font-medium group-hover:translate-x-1 transition-transform">
-                      Oku <ArrowRight className="h-3 w-3" />
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            </motion.div>
-          ))}
-        </motion.div>
+                  </Card>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+        </div>
       </main>
-      <Footer />
-    </>
+    </div>
   );
 }

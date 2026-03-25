@@ -20,104 +20,52 @@ import { Button } from '@/components/ui/button';
 import { ThemeSwitcher } from '@/components/theme-switcher';
 
 const navigationItems = [
-  {
-    label: 'Overview',
-    href: '/dashboard',
-    icon: LayoutDashboard,
-  },
-  {
-    label: 'Profile',
-    href: '/dashboard/profile',
-    icon: User,
-  },
-  {
-    label: 'Analytics',
-    href: '/dashboard/analytics',
-    icon: BarChart3,
-  },
-  {
-    label: 'Settings',
-    href: '/dashboard/settings',
-    icon: Settings,
-  },
+  { label: 'Genel Bakış', href: '/dashboard', icon: LayoutDashboard },
+  { label: 'Profil', href: '/dashboard/profile', icon: User },
+  { label: 'Analitik', href: '/dashboard/analytics', icon: BarChart3 },
+  { label: 'Ayarlar', href: '/dashboard/settings', icon: Settings },
 ];
 
 const aiFeatures = [
-  {
-    label: 'AI Bio Generator',
-    href: '/dashboard/ai-bio',
-    icon: Sparkles,
-  },
-  {
-    label: 'Roadmap Builder',
-    href: '/dashboard/roadmap',
-    icon: Map,
-  },
+  { label: 'AI Bio Oluşturucu', href: '/dashboard/ai-bio', icon: Sparkles },
+  { label: 'Yol Haritası', href: '/dashboard/roadmap', icon: Map },
 ];
 
-export default function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const isActive = (href: string) => {
-    return pathname === href || pathname.startsWith(href + '/');
-  };
+  const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/');
 
-  const handleLogout = () => {
-    // Clear auth state from localStorage
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('userId');
-    // Redirect to homepage
-    router.push('/');
+  const handleSignOut = () => {
+    router.push('/auth/login');
   };
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-40 border-b border-border/50 bg-background/95 backdrop-blur-xl">
         <div className="h-16 px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-          {/* Logo */}
           <Link href="/dashboard" className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center">
               <Zap className="w-5 h-5 text-white" />
             </div>
             <span className="hidden sm:inline font-bold text-lg">BioPath Pro</span>
           </Link>
-
-          {/* Right Side */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-4">
             <ThemeSwitcher />
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={handleLogout}
-              title="Logout"
-            >
-              <LogOut className="w-5 h-5" />
-              <span className="sr-only">Logout</span>
-            </Button>
             <Button
               variant="ghost"
               size="icon"
               onClick={() => setSidebarOpen(!sidebarOpen)}
               className="lg:hidden"
             >
-              {sidebarOpen ? (
-                <X className="w-5 h-5" />
-              ) : (
-                <Menu className="w-5 h-5" />
-              )}
+              {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </Button>
           </div>
         </div>
       </header>
 
-      {/* Mobile Sidebar Overlay */}
       <AnimatePresence>
         {sidebarOpen && (
           <motion.div
@@ -125,24 +73,22 @@ export default function DashboardLayout({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setSidebarOpen(false)}
-            className="fixed inset-0 bg-black/50 z-20 lg:hidden top-16"
+            className="fixed inset-0 bg-black/50 z-20 lg:hidden"
           />
         )}
       </AnimatePresence>
 
-      {/* Sidebar */}
       <motion.aside
         initial={{ x: -256 }}
         animate={{ x: sidebarOpen ? 0 : -256 }}
         exit={{ x: -256 }}
         transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-        className="fixed left-0 top-16 bottom-0 w-64 border-r border-border/50 bg-card lg:translate-x-0 z-30 overflow-y-auto lg:sticky"
+        className="fixed left-0 top-16 bottom-0 w-64 border-r border-border/50 bg-card lg:translate-x-0 z-30 overflow-y-auto"
       >
         <div className="p-6 space-y-8">
-          {/* Main Navigation */}
           <div className="space-y-2">
             <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3">
-              Main
+              Ana Menü
             </p>
             <nav className="space-y-1">
               {navigationItems.map((item) => {
@@ -154,9 +100,7 @@ export default function DashboardLayout({
                       onClick={() => setSidebarOpen(false)}
                       whileHover={{ x: 4 }}
                       className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-all ${
-                        active
-                          ? 'bg-primary/10 text-primary'
-                          : 'text-muted-foreground hover:bg-secondary/50'
+                        active ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:bg-secondary/50'
                       }`}
                     >
                       <Icon className="w-5 h-5" />
@@ -174,10 +118,9 @@ export default function DashboardLayout({
             </nav>
           </div>
 
-          {/* AI Features */}
           <div className="space-y-2">
             <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3">
-              AI Tools
+              Yapay Zeka
             </p>
             <nav className="space-y-1">
               {aiFeatures.map((item) => {
@@ -189,9 +132,7 @@ export default function DashboardLayout({
                       onClick={() => setSidebarOpen(false)}
                       whileHover={{ x: 4 }}
                       className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-all ${
-                        active
-                          ? 'bg-primary/10 text-primary'
-                          : 'text-muted-foreground hover:bg-secondary/50'
+                        active ? 'bg-accent/10 text-accent' : 'text-muted-foreground hover:bg-secondary/50'
                       }`}
                     >
                       <Icon className="w-5 h-5" />
@@ -199,7 +140,7 @@ export default function DashboardLayout({
                       {active && (
                         <motion.div
                           layoutId="activeIndicator"
-                          className="ml-auto w-1.5 h-1.5 rounded-full bg-primary"
+                          className="ml-auto w-1.5 h-1.5 rounded-full bg-accent"
                         />
                       )}
                     </motion.button>
@@ -208,12 +149,29 @@ export default function DashboardLayout({
               })}
             </nav>
           </div>
+
+          <div className="space-y-2 pt-4 border-t border-border/50">
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full justify-start"
+              onClick={handleSignOut}
+            >
+              <LogOut className="w-4 h-4 mr-2" />
+              Çıkış Yap
+            </Button>
+          </div>
         </div>
       </motion.aside>
 
-      {/* Main Content */}
-      <main className="lg:ml-64 pt-16">
-        {children}
+      <main className="lg:pl-64 pt-16 min-h-screen">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+        >
+          {children}
+        </motion.div>
       </main>
     </div>
   );
