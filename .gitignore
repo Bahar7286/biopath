@@ -1,3 +1,5 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
 # dependencies
 /node_modules
 /.pnp
@@ -28,13 +30,8 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files — GERÇEK API KEY'LERİ ASLA GITHUB'A PUSH ETME
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-# NOT: .env.example GitHub'a push edilir (içinde gerçek key YOK)
+# env files (can opt-in for committing if needed)
+.env*
 
 # vercel
 .vercel
