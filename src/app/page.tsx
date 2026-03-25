@@ -8,7 +8,6 @@ import {
   ArrowRight,
   BarChart3,
   Palette,
-  Code2,
   GitBranch,
   Download,
   Zap,
@@ -51,7 +50,7 @@ export default function Home() {
 
   return (
     <>
-      <div className="min-h-screen flex flex-col">
+      <div className="min-h-screen flex flex-col bg-background">
         {/* Hero Section */}
         <section className="pt-20 pb-16 px-4 sm:px-6 flex-1">
           <div className="max-w-6xl mx-auto">
@@ -73,39 +72,47 @@ export default function Home() {
               <div className="flex flex-col sm:flex-row justify-center gap-4">
                 <Button asChild size="lg" className="group">
                   <Link href="/auth/signup">
-                    Get Started <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                    Get Started
+                    <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                   </Link>
                 </Button>
                 <Button asChild variant="outline" size="lg">
-                  <Link href="/about">Learn More</Link>
+                  <Link href="/blog">Learn More</Link>
                 </Button>
               </div>
             </motion.div>
 
-            {/* Feature Cards */}
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-            >
+            {/* Feature Cards - FIXED */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {features.map((feature, idx) => {
                 const Icon = feature.icon;
                 return (
                   <motion.div
                     key={idx}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: idx * 0.1 }}
                     whileHover={{ y: -4 }}
-                    className="group p-6 rounded-lg border border-border/40 bg-card hover:border-primary/40 transition-all duration-300"
+                    className="p-6 rounded-lg border border-border/40 bg-card hover:border-primary/40 transition-all duration-300"
                   >
-                    <div className="mb-4 inline-flex p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                      <Icon className="h-6 w-6 text-primary" />
+                    {/* Icon Box */}
+                    <div className="mb-4 inline-flex p-3 rounded-lg bg-primary/10 hover:bg-primary/20 transition-colors">
+                      <Icon className="h-6 w-6 text-primary" strokeWidth={2} />
                     </div>
-                    <h3 className="font-semibold text-foreground mb-2">{feature.title}</h3>
-                    <p className="text-sm text-muted-foreground">{feature.description}</p>
+                    
+                    {/* Title */}
+                    <h3 className="font-semibold text-foreground mb-2 text-base">
+                      {feature.title}
+                    </h3>
+                    
+                    {/* Description */}
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      {feature.description}
+                    </p>
                   </motion.div>
                 );
               })}
-            </motion.div>
+            </div>
           </div>
         </section>
 
@@ -125,7 +132,8 @@ export default function Home() {
             </p>
             <Button asChild size="lg" className="group">
               <Link href="/auth/signup">
-                Create Your Profile <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                Create Your Profile
+                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Link>
             </Button>
           </div>
