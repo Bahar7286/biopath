@@ -7,7 +7,7 @@ import { motion } from 'motion/react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Mail, Lock, ArrowRight, Sparkles } from 'lucide-react';
+import { Mail, Lock, ArrowRight, AlertCircle } from 'lucide-react';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -28,7 +28,6 @@ export default function LoginPage() {
     setError('');
     setIsLoading(true);
 
-    // Validation
     if (!formData.email || !formData.password) {
       setError('Email and password are required');
       setIsLoading(false);
@@ -36,168 +35,119 @@ export default function LoginPage() {
     }
 
     try {
-      // TODO: Integrate with Supabase Auth
-      // const { data, error: authError } = await supabase.auth.signInWithPassword({
-      //   email: formData.email,
-      //   password: formData.password,
-      // });
-
-      // Temporary redirect for demo
+      // localStorage ile auth (demo purpose)
+      const user = {
+        id: Date.now().toString(),
+        email: formData.email,
+        name: formData.email.split('@')[0],
+      };
+      
+      localStorage.setItem('authToken', JSON.stringify(user));
+      localStorage.setItem('userId', user.id);
+      
+      // Vercel API routes ile production'da gerçek auth yapılacak
       setTimeout(() => {
         router.push('/dashboard');
-      }, 1000);
+      }, 500);
     } catch (err: any) {
-      setError(err.message || 'Invalid email or password');
-    } finally {
+      setError(err.message || 'Giriş başarısız oldu');
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center px-4">
+    <div className="min-h-screen flex items-center justify-center px-4 bg-gradient-to-br from-background via-background to-primary/5">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
         className="w-full max-w-md"
       >
-        {/* Header */}
-        <div className="mb-8 text-center">
-          <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 0.1 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/30 bg-primary/5 mb-4"
-          >
-            <Sparkles className="w-4 h-4 text-primary" />
-            <span className="text-sm font-medium">Welcome back</span>
-          </motion.div>
-
-          <h1 className="text-3xl font-bold mb-2">Sign In</h1>
-          <p className="text-muted-foreground">
-            Access your professional profile and dashboard
-          </p>
-        </div>
-
-        {/* Form Card */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="p-8 rounded-2xl border border-border/50 bg-card shadow-sm space-y-6"
-        >
-          <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Email */}
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-foreground font-medium">
-                Email Address
-              </Label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
-                <Input
-                  id="email"
-                  type="email"
-                  name="email"
-                  placeholder="you@example.com"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="pl-10 bg-background border-border/50"
-                  disabled={isLoading}
-                />
+        <div className="space-y-8">
+          {/* Header */}
+          <div className="text-center space-y-2">
+            <div className="flex justify-center mb-4">
+              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+                <Mail className="w-6 h-6 text-white" />
               </div>
             </div>
+            <h1 className="text-2xl font-bold text-foreground">Geri dön</h1>
+            <p className="text-muted-foreground">
+              BioPath Pro hesabınıza giriş yapın
+            </p>
+          </div>
 
-            {/* Password */}
+          {/* Error Message */}
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="p-4 rounded-lg bg-destructive/10 border border-destructive/20 flex gap-3"
+            >
+              <AlertCircle className="h-5 w-5 text-destructive flex-shrink-0 mt-0.5" />
+              <span className="text-sm text-destructive">{error}</span>
+            </motion.div>
+          )}
+
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="email">E-posta</Label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="your@email.com"
+                value={formData.email}
+                onChange={handleChange}
+                disabled={isLoading}
+              />
+            </div>
+
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label htmlFor="password" className="text-foreground font-medium">
-                  Password
-                </Label>
+                <Label htmlFor="password">Şifre</Label>
                 <Link
-                  href="/auth/reset-password"
-                  className="text-sm text-primary hover:underline"
+                  href="/auth/forgot-password"
+                  className="text-xs text-primary hover:text-accent transition-colors"
                 >
-                  Forgot?
+                  Şifremi unuttum?
                 </Link>
               </div>
-              <div className="relative">
-                <Lock className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
-                <Input
-                  id="password"
-                  type="password"
-                  name="password"
-                  placeholder="••••••••"
-                  value={formData.password}
-                  onChange={handleChange}
-                  className="pl-10 bg-background border-border/50"
-                  disabled={isLoading}
-                />
-              </div>
+              <Input
+                id="password"
+                name="password"
+                type="password"
+                placeholder="••••••••"
+                value={formData.password}
+                onChange={handleChange}
+                disabled={isLoading}
+              />
             </div>
 
-            {/* Error Message */}
-            {error && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="p-4 rounded-lg bg-destructive/10 border border-destructive/50 text-destructive text-sm"
-              >
-                {error}
-              </motion.div>
-            )}
-
-            {/* Submit Button */}
-            <Button
-              type="submit"
-              disabled={isLoading}
-              className="w-full bg-primary hover:bg-primary/90 text-lg h-11 mt-2"
-            >
-              {isLoading ? 'Signing in...' : 'Sign In'}
-              {!isLoading && <ArrowRight className="ml-2 w-5 h-5" />}
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? (
+                <>
+                  <span className="animate-spin mr-2">⏳</span>
+                  Giriş yapılıyor...
+                </>
+              ) : (
+                <>
+                  Giriş Yap
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </>
+              )}
             </Button>
           </form>
 
-          {/* Divider */}
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-border/30" />
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-card text-muted-foreground">Or continue with</span>
-            </div>
+          {/* Signup Link */}
+          <div className="text-center text-sm text-muted-foreground">
+            Hesabınız yok mu?{' '}
+            <Link href="/auth/signup" className="font-semibold text-primary hover:text-accent transition-colors">
+              Kaydol
+            </Link>
           </div>
-
-          {/* Social Buttons */}
-          <div className="grid grid-cols-2 gap-3">
-            <Button
-              variant="outline"
-              className="border-border/50"
-              disabled={isLoading}
-            >
-              GitHub
-            </Button>
-            <Button
-              variant="outline"
-              className="border-border/50"
-              disabled={isLoading}
-            >
-              Google
-            </Button>
-          </div>
-        </motion.div>
-
-        {/* Sign Up Link */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          className="mt-6 text-center text-muted-foreground"
-        >
-          Don't have an account?{' '}
-          <Link href="/auth/signup" className="text-primary hover:underline font-medium">
-            Create one
-          </Link>
-        </motion.div>
+        </div>
       </motion.div>
     </div>
   );
