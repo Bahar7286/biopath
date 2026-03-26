@@ -54,34 +54,28 @@ export default function SettingsPage() {
     }
   }, []);
 
-  // Hex to oklch approximation helper
-  const hexToOklch = (hex: string): string => {
-    const r = parseInt(hex.slice(1, 3), 16) / 255;
-    const g = parseInt(hex.slice(3, 5), 16) / 255;
-    const b = parseInt(hex.slice(5, 7), 16) / 255;
-    // Simple luminance calc
-    const l = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-    const lightness = Math.pow(l, 0.43) * 0.85 + 0.15;
-    const max = Math.max(r, g, b), min = Math.min(r, g, b);
-    const chroma = (max - min) * 0.2;
-    const hue = max === min ? 0 : max === r ? ((g - b) / (max - min)) * 60 : max === g ? ((b - r) / (max - min)) * 60 + 120 : ((r - g) / (max - min)) * 60 + 240;
-    return `oklch(${lightness.toFixed(4)} ${chroma.toFixed(4)} ${((hue + 360) % 360).toFixed(1)})`;
-  };
-
   // Renk teması seçildiğinde GERÇEK CSS değişkenlerini güncelle
   const applyColorTheme = (themeOption: Theme) => {
     setSelectedTheme(themeOption.id);
     const root = document.documentElement;
     const { primary, secondary, accent } = themeOption.colors;
 
-    // Ana tema değişkenlerini güncelle (Tailwind/shadcn bunları kullanıyor)
-    root.style.setProperty('--primary', hexToOklch(primary));
-    root.style.setProperty('--ring', hexToOklch(primary));
-    root.style.setProperty('--accent', hexToOklch(accent));
-    root.style.setProperty('--chart-1', hexToOklch(primary));
-    root.style.setProperty('--chart-5', hexToOklch(accent));
-    root.style.setProperty('--sidebar-primary', hexToOklch(primary));
-    root.style.setProperty('--sidebar-accent', hexToOklch(accent));
+    // Hex degerleri dogrudan CSS custom properties olarak yaz
+    // CSS custom properties her renk formatini destekler (hex, rgb, oklch, hsl)
+    root.style.setProperty('--primary', primary);
+    root.style.setProperty('--primary-foreground', '#ffffff');
+    root.style.setProperty('--ring', primary);
+    root.style.setProperty('--accent', accent);
+    root.style.setProperty('--accent-foreground', '#ffffff');
+    root.style.setProperty('--chart-1', primary);
+    root.style.setProperty('--chart-2', accent);
+    root.style.setProperty('--chart-5', accent);
+    root.style.setProperty('--sidebar-primary', primary);
+    root.style.setProperty('--sidebar-primary-foreground', '#ffffff');
+    root.style.setProperty('--sidebar-accent', accent);
+    root.style.setProperty('--sidebar-accent-foreground', '#ffffff');
+    root.style.setProperty('--sidebar-ring', primary);
+    root.style.setProperty('--secondary', secondary);
 
     // localStorage'a kaydet
     localStorage.setItem('biopath_color_theme', JSON.stringify({
