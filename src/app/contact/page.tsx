@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { motion } from 'motion/react';
+import { Footer } from '@/components/footer';
 import Link from 'next/link';
 import { ChevronLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -116,6 +117,7 @@ export default function ContactPage() {
           </div>
         </div>
       </main>
+      <Footer />
     </div>
   );
 }

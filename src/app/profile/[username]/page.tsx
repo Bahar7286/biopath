@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import { motion } from 'motion/react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -12,7 +12,8 @@ import {
 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 
-export default function PublicProfilePage({ params }: { params: { username: string } }) {
+export default function PublicProfilePage({ params }: { params: Promise<{ username: string }> }) {
+  const resolvedParams = use(params);
   const [profile, setProfile] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
@@ -20,7 +21,7 @@ export default function PublicProfilePage({ params }: { params: { username: stri
 
   useEffect(() => {
     loadProfile();
-  }, [params.username]);
+  }, [resolvedParams.username]);
 
   const loadProfile = async () => {
     setIsLoading(true);
@@ -28,7 +29,7 @@ export default function PublicProfilePage({ params }: { params: { username: stri
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
-        .eq('username', params.username.toLowerCase())
+        .eq('username', resolvedParams.username.toLowerCase())
         .single();
 
       if (error || !data) {
@@ -80,7 +81,7 @@ export default function PublicProfilePage({ params }: { params: { username: stri
           </div>
           <h1 className="text-3xl font-bold mb-3">Profil Bulunamadı</h1>
           <p className="text-muted-foreground mb-6">
-            <strong>@{params.username}</strong> kullanıcı adına sahip bir profil bulunamadı.
+            <strong>@{resolvedParams.username}</strong> kullanıcı adına sahip bir profil bulunamadı.
           </p>
           <div className="flex gap-3 justify-center flex-wrap">
             <Link href="/"><Button variant="outline">Ana Sayfaya Dön</Button></Link>

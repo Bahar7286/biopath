@@ -12,10 +12,25 @@ interface GitHubRepo {
 
 const GITHUB_API_BASE = 'https://api.github.com';
 
+// GitHub URL veya kullanıcı adından username çıkar
+function extractUsername(input: string): string {
+  let cleaned = input.trim();
+  // URL formatları: https://github.com/username, github.com/username, @username
+  cleaned = cleaned.replace(/^https?:\/\/(www\.)?github\.com\//i, '');
+  cleaned = cleaned.replace(/^github\.com\//i, '');
+  cleaned = cleaned.replace(/^@/, '');
+  // Kalan slash ve parametreleri kaldır
+  cleaned = cleaned.split('/')[0].split('?')[0];
+  return cleaned;
+}
+
+export { extractUsername };
+
 export async function fetchUserRepositories(
-  username: string,
+  usernameOrUrl: string,
   limit: number = 30
 ): Promise<GitHubRepo[]> {
+  const username = extractUsername(usernameOrUrl);
   try {
     const response = await fetch(
       `${GITHUB_API_BASE}/users/${username}/repos?sort=stars&order=desc&per_page=${limit}`,
@@ -68,7 +83,8 @@ export async function fetchRepositoryDetails(owner: string, repo: string) {
   }
 }
 
-export async function getGitHubUserProfile(username: string) {
+export async function getGitHubUserProfile(usernameOrUrl: string) {
+  const username = extractUsername(usernameOrUrl);
   try {
     const response = await fetch(`${GITHUB_API_BASE}/users/${username}`, {
       headers: {

@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Mail, ArrowLeft, CheckCircle2, Loader2 } from 'lucide-react';
+import { Footer } from '@/components/footer';
 import { supabase } from '@/lib/supabase';
 
 export default function ResetPasswordPage() {
@@ -158,6 +159,7 @@ export default function ResetPasswordPage() {
           </Link>
         </div>
       </motion.div>
+      <Footer />
     </div>
   );
 }

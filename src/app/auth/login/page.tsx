@@ -7,7 +7,8 @@ import { motion } from 'motion/react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Mail, Lock, ArrowRight, Sparkles } from 'lucide-react';
+import { Mail, Lock, ArrowRight, Sparkles, ChevronLeft } from 'lucide-react';
+import { Footer } from '@/components/footer';
 import { supabase } from '@/lib/supabase';
 
 export default function LoginPage() {
@@ -61,8 +62,15 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center px-4">
+    <div className="min-h-screen bg-background flex flex-col">
+      <div className="flex-1 flex items-center justify-center px-4">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="w-full max-w-md">
+        <div className="mb-4">
+          <Link href="/" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors group">
+            <ChevronLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
+            Ana Sayfa
+          </Link>
+        </div>
         <div className="mb-8 text-center">
           <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.1 }}
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/30 bg-primary/5 mb-4">
@@ -141,6 +149,8 @@ export default function LoginPage() {
           <Link href="/auth/signup" className="text-primary hover:underline font-medium">Oluşturun</Link>
         </motion.div>
       </motion.div>
+      </div>
+      <Footer />
     </div>
   );
 }

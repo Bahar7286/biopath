@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'motion/react';
+import { Footer } from '@/components/footer';
 import Link from 'next/link';
 import { ChevronLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -64,6 +65,7 @@ export default function TermsPage() {
           </motion.div>
         </div>
       </main>
+      <Footer />
     </div>
   );
 }

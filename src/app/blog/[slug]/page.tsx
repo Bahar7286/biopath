@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import { motion } from 'motion/react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -150,8 +150,9 @@ function renderContent(content: string) {
   return elements;
 }
 
-export default function BlogPostPage({ params }: { params: { slug: string } }) {
-  const post = getBlogPost(params.slug);
+export default function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = use(params);
+  const post = getBlogPost(slug);
 
   if (!post) {
     notFound();

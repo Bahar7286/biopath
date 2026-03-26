@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'motion/react';
+import { Footer } from '@/components/footer';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -67,6 +68,7 @@ export default function BlogPage() {
           </div>
         </div>
       </main>
+      <Footer />
     </div>
   );
 }
