@@ -8,6 +8,7 @@ import { Card } from '@/components/ui/card';
 import {
   Github, Globe, Mail, Copy, Share2, ExternalLink,
   CheckCircle2, Code2, Star, GitFork, Calendar, Loader2, AlertCircle,
+  Map, Circle, Target,
 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 
@@ -165,6 +166,75 @@ export default function PublicProfilePage({ params }: { params: { username: stri
             </motion.div>
           </div>
         </motion.div>
+
+        {/* Yol Haritası */}
+        {profile.roadmap && profile.roadmap.length > 0 && (
+          <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="mb-12">
+            <h2 className="text-3xl font-bold mb-6 flex items-center gap-3">
+              <Map className="w-7 h-7 text-accent" /> Yol Haritası
+            </h2>
+            <div className="space-y-3">
+              {profile.roadmap.map((item: any, index: number) => (
+                <motion.div
+                  key={item.id || index}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.25 + index * 0.05 }}
+                  className={`flex items-start gap-4 p-4 rounded-lg border transition-all ${
+                    item.completed
+                      ? 'border-green-500/30 bg-green-500/5'
+                      : 'border-border/50 bg-card'
+                  }`}
+                >
+                  <div className="mt-0.5 flex-shrink-0">
+                    {item.completed ? (
+                      <CheckCircle2 className="w-5 h-5 text-green-500" />
+                    ) : (
+                      <Circle className="w-5 h-5 text-muted-foreground" />
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className={`font-medium ${item.completed ? 'line-through text-muted-foreground' : 'text-foreground'}`}>
+                      {item.title}
+                    </p>
+                    {item.description && (
+                      <p className="text-sm text-muted-foreground mt-1">{item.description}</p>
+                    )}
+                    <div className="flex items-center gap-3 mt-2">
+                      {item.priority && (
+                        <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                          item.priority === 'high' ? 'bg-red-500/20 text-red-700 dark:text-red-400' :
+                          item.priority === 'medium' ? 'bg-yellow-500/20 text-yellow-700 dark:text-yellow-400' :
+                          'bg-green-500/20 text-green-700 dark:text-green-400'
+                        }`}>
+                          {item.priority === 'high' ? 'Yüksek' : item.priority === 'medium' ? 'Orta' : 'Düşük'}
+                        </span>
+                      )}
+                      {item.dueDate && (
+                        <span className="text-xs text-muted-foreground flex items-center gap-1">
+                          <Calendar className="w-3 h-3" />{item.dueDate}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+            {(() => {
+              const completed = profile.roadmap.filter((r: any) => r.completed).length;
+              const total = profile.roadmap.length;
+              const pct = total === 0 ? 0 : Math.round((completed / total) * 100);
+              return (
+                <div className="mt-4 flex items-center gap-3">
+                  <div className="flex-1 h-2 bg-secondary rounded-full overflow-hidden">
+                    <div className="h-full bg-primary rounded-full transition-all" style={{ width: `${pct}%` }} />
+                  </div>
+                  <span className="text-sm font-medium text-muted-foreground">{pct}%</span>
+                </div>
+              );
+            })()}
+          </motion.div>
+        )}
 
         {/* Projeler */}
         {repos.length > 0 && (

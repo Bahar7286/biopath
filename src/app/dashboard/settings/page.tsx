@@ -42,8 +42,33 @@ export default function SettingsPage() {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       setBaseUrl(window.location.origin);
+      // Kaydedilmiş renk temasını yükle
+      const savedColorTheme = localStorage.getItem('biopath_color_theme');
+      if (savedColorTheme) {
+        try {
+          const parsed = JSON.parse(savedColorTheme);
+          const idx = THEMES.findIndex(t => t.id === parsed.id);
+          if (idx >= 0) setSelectedTheme(THEMES[idx].id);
+        } catch { /* ignore */ }
+      }
     }
   }, []);
+
+  // Renk teması seçildiğinde CSS'e uygula
+  const applyColorTheme = (themeOption: Theme) => {
+    setSelectedTheme(themeOption.id);
+    // CSS custom properties olarak uygula
+    document.documentElement.style.setProperty('--color-primary', themeOption.colors.primary);
+    document.documentElement.style.setProperty('--color-secondary', themeOption.colors.secondary);
+    document.documentElement.style.setProperty('--color-accent', themeOption.colors.accent);
+    // localStorage'a kaydet
+    localStorage.setItem('biopath_color_theme', JSON.stringify({
+      id: themeOption.id,
+      primary: themeOption.colors.primary,
+      secondary: themeOption.colors.secondary,
+      accent: themeOption.colors.accent,
+    }));
+  };
 
   const handleCopyUrl = () => {
     const url = `${baseUrl || 'https://localhost:3000'}/profile/${profileUrl || 'kullanici-adi'}`;
@@ -193,7 +218,7 @@ export default function SettingsPage() {
                 {THEMES.map((themeOption, index) => (
                   <motion.div key={themeOption.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.05 }}>
                     <button
-                      onClick={() => setSelectedTheme(themeOption.id)}
+                      onClick={() => applyColorTheme(themeOption)}
                       className={`w-full p-4 rounded-lg border-2 transition-all text-left group ${
                         selectedTheme === themeOption.id ? 'border-primary bg-primary/5' : 'border-border/30 hover:border-border/50'
                       }`}

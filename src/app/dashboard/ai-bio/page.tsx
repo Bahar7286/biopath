@@ -238,7 +238,28 @@ export default function AiBioPage() {
 
                     <p className="text-foreground mb-4 leading-relaxed">{bio.text}</p>
 
-                    <div className="flex items-center gap-2 pt-4 border-t border-border/30">
+                    <div className="flex items-center gap-2 pt-4 border-t border-border/30 flex-wrap">
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => {
+                          // Biyografiyi profil verisine ekle
+                          try {
+                            const saved = localStorage.getItem('biopath_profile');
+                            const profile = saved ? JSON.parse(saved) : {};
+                            profile.bio = bio.text;
+                            profile.bio_variants = profile.bio_variants || [];
+                            if (!profile.bio_variants.includes(bio.text)) {
+                              profile.bio_variants.push(bio.text);
+                            }
+                            localStorage.setItem('biopath_profile', JSON.stringify(profile));
+                            handleCopy(bio.text, bio.id);
+                          } catch { handleCopy(bio.text, bio.id); }
+                        }}
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-accent/10 hover:bg-accent/20 text-accent text-sm font-medium transition-colors"
+                      >
+                        <CheckCircle2 className="w-4 h-4" />Biyografime Ekle
+                      </motion.button>
                       <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}

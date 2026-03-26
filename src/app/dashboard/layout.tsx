@@ -31,6 +31,66 @@ const aiFeatures = [
   { label: 'Yol Haritası', href: '/dashboard/roadmap', icon: Map },
 ];
 
+function SidebarContent({ onNavigate, isActive }: { onNavigate: () => void; isActive: (href: string) => boolean }) {
+  return (
+    <div className="p-6 space-y-8">
+      <div className="space-y-2">
+        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3">
+          Ana Menü
+        </p>
+        <nav className="space-y-1">
+          {navigationItems.map((item) => {
+            const Icon = item.icon;
+            const active = isActive(item.href);
+            return (
+              <Link key={item.href} href={item.href} onClick={onNavigate}>
+                <div
+                  className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-all hover:translate-x-1 ${
+                    active ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:bg-secondary/50'
+                  }`}
+                >
+                  <Icon className="w-5 h-5" />
+                  <span className="text-sm font-medium">{item.label}</span>
+                  {active && (
+                    <div className="ml-auto w-1.5 h-1.5 rounded-full bg-primary" />
+                  )}
+                </div>
+              </Link>
+            );
+          })}
+        </nav>
+      </div>
+
+      <div className="space-y-2">
+        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3">
+          Yapay Zeka
+        </p>
+        <nav className="space-y-1">
+          {aiFeatures.map((item) => {
+            const Icon = item.icon;
+            const active = isActive(item.href);
+            return (
+              <Link key={item.href} href={item.href} onClick={onNavigate}>
+                <div
+                  className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-all hover:translate-x-1 ${
+                    active ? 'bg-accent/10 text-accent' : 'text-muted-foreground hover:bg-secondary/50'
+                  }`}
+                >
+                  <Icon className="w-5 h-5" />
+                  <span className="text-sm font-medium">{item.label}</span>
+                  {active && (
+                    <div className="ml-auto w-1.5 h-1.5 rounded-full bg-accent" />
+                  )}
+                </div>
+              </Link>
+            );
+          })}
+        </nav>
+      </div>
+    </div>
+  );
+}
+
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
@@ -44,6 +104,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-40 border-b border-border/50 bg-background/95 backdrop-blur-xl">
         <div className="h-16 px-4 sm:px-6 lg:px-8 flex items-center justify-between">
           <Link href="/dashboard" className="flex items-center gap-2">
@@ -66,104 +127,58 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </div>
       </header>
 
+      {/* Desktop Sidebar - always visible on lg+ */}
+      <aside className="hidden lg:block fixed left-0 top-16 bottom-0 w-64 border-r border-border/50 bg-card z-30 overflow-y-auto">
+        <SidebarContent onNavigate={() => {}} isActive={isActive} />
+        <div className="px-6 pb-6">
+          <Button
+            variant="outline"
+            size="sm"
+            className="w-full justify-start"
+            onClick={handleSignOut}
+          >
+            <LogOut className="w-4 h-4 mr-2" />
+            Çıkış Yap
+          </Button>
+        </div>
+      </aside>
+
+      {/* Mobile Sidebar Overlay */}
       <AnimatePresence>
         {sidebarOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setSidebarOpen(false)}
-            className="fixed inset-0 bg-black/50 z-20 lg:hidden"
-          />
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSidebarOpen(false)}
+              className="fixed inset-0 bg-black/50 z-20 lg:hidden"
+            />
+            <motion.aside
+              initial={{ x: -256 }}
+              animate={{ x: 0 }}
+              exit={{ x: -256 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+              className="fixed left-0 top-16 bottom-0 w-64 border-r border-border/50 bg-card z-30 overflow-y-auto lg:hidden"
+            >
+              <SidebarContent onNavigate={() => setSidebarOpen(false)} isActive={isActive} />
+              <div className="px-6 pb-6">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full justify-start"
+                  onClick={handleSignOut}
+                >
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Çıkış Yap
+                </Button>
+              </div>
+            </motion.aside>
+          </>
         )}
       </AnimatePresence>
 
-      <motion.aside
-        initial={{ x: -256 }}
-        animate={{ x: sidebarOpen ? 0 : -256 }}
-        exit={{ x: -256 }}
-        transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-        className="fixed left-0 top-16 bottom-0 w-64 border-r border-border/50 bg-card lg:translate-x-0 z-30 overflow-y-auto"
-      >
-        <div className="p-6 space-y-8">
-          <div className="space-y-2">
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3">
-              Ana Menü
-            </p>
-            <nav className="space-y-1">
-              {navigationItems.map((item) => {
-                const Icon = item.icon;
-                const active = isActive(item.href);
-                return (
-                  <Link key={item.href} href={item.href}>
-                    <motion.button
-                      onClick={() => setSidebarOpen(false)}
-                      whileHover={{ x: 4 }}
-                      className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-all ${
-                        active ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:bg-secondary/50'
-                      }`}
-                    >
-                      <Icon className="w-5 h-5" />
-                      <span className="text-sm font-medium">{item.label}</span>
-                      {active && (
-                        <motion.div
-                          layoutId="activeIndicator"
-                          className="ml-auto w-1.5 h-1.5 rounded-full bg-primary"
-                        />
-                      )}
-                    </motion.button>
-                  </Link>
-                );
-              })}
-            </nav>
-          </div>
-
-          <div className="space-y-2">
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3">
-              Yapay Zeka
-            </p>
-            <nav className="space-y-1">
-              {aiFeatures.map((item) => {
-                const Icon = item.icon;
-                const active = isActive(item.href);
-                return (
-                  <Link key={item.href} href={item.href}>
-                    <motion.button
-                      onClick={() => setSidebarOpen(false)}
-                      whileHover={{ x: 4 }}
-                      className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-all ${
-                        active ? 'bg-accent/10 text-accent' : 'text-muted-foreground hover:bg-secondary/50'
-                      }`}
-                    >
-                      <Icon className="w-5 h-5" />
-                      <span className="text-sm font-medium">{item.label}</span>
-                      {active && (
-                        <motion.div
-                          layoutId="activeIndicator"
-                          className="ml-auto w-1.5 h-1.5 rounded-full bg-accent"
-                        />
-                      )}
-                    </motion.button>
-                  </Link>
-                );
-              })}
-            </nav>
-          </div>
-
-          <div className="space-y-2 pt-4 border-t border-border/50">
-            <Button
-              variant="outline"
-              size="sm"
-              className="w-full justify-start"
-              onClick={handleSignOut}
-            >
-              <LogOut className="w-4 h-4 mr-2" />
-              Çıkış Yap
-            </Button>
-          </div>
-        </div>
-      </motion.aside>
-
+      {/* Main Content */}
       <main className="lg:pl-64 pt-16 min-h-screen">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

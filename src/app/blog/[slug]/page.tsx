@@ -1,11 +1,102 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, Clock, Calendar, Tag, ArrowRight } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { ChevronLeft, Clock, Calendar, Tag, ArrowRight, Send, Trash2, MessageCircle } from 'lucide-react';
 import { blogPosts, getBlogPost, categoryColors } from '@/lib/blog-posts';
+
+interface Comment {
+  id: number;
+  name: string;
+  text: string;
+  date: string;
+}
+
+function CommentSection({ slug }: { slug: string }) {
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [name, setName] = useState('');
+  const [text, setText] = useState('');
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(`blog_comments_${slug}`);
+      if (saved) setComments(JSON.parse(saved));
+    } catch { /* ignore */ }
+  }, [slug]);
+
+  const addComment = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name.trim() || !text.trim()) return;
+    const comment: Comment = { id: Date.now(), name: name.trim(), text: text.trim(), date: new Date().toISOString() };
+    const updated = [...comments, comment];
+    setComments(updated);
+    localStorage.setItem(`blog_comments_${slug}`, JSON.stringify(updated));
+    setText('');
+  };
+
+  const deleteComment = (id: number) => {
+    const updated = comments.filter(c => c.id !== id);
+    setComments(updated);
+    localStorage.setItem(`blog_comments_${slug}`, JSON.stringify(updated));
+  };
+
+  return (
+    <div className="mt-16 pt-10 border-t border-border/30">
+      <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
+        <MessageCircle className="w-5 h-5 text-primary" />
+        Yorumlar ({comments.length})
+      </h2>
+
+      <form onSubmit={addComment} className="p-5 rounded-xl border border-border/50 bg-card mb-8 space-y-4">
+        <div>
+          <label className="text-sm font-medium text-foreground mb-1 block">Adınız</label>
+          <Input value={name} onChange={e => setName(e.target.value)} placeholder="Adınızı girin..." required />
+        </div>
+        <div>
+          <label className="text-sm font-medium text-foreground mb-1 block">Yorumunuz</label>
+          <Textarea value={text} onChange={e => setText(e.target.value)} placeholder="Düşüncelerinizi paylaşın..." rows={3} required />
+        </div>
+        <Button type="submit" size="sm" className="bg-primary hover:bg-primary/90">
+          <Send className="w-4 h-4 mr-2" /> Yorum Yap
+        </Button>
+      </form>
+
+      {comments.length === 0 && (
+        <p className="text-center text-muted-foreground py-8">Henüz yorum yok. İlk yorumu siz yapın!</p>
+      )}
+
+      <div className="space-y-4">
+        {comments.map(c => (
+          <motion.div key={c.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+            className="p-4 rounded-xl border border-border/50 bg-card">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-sm">
+                  {c.name.charAt(0).toUpperCase()}
+                </div>
+                <div>
+                  <p className="font-medium text-sm text-foreground">{c.name}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {new Date(c.date).toLocaleDateString('tr-TR', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                  </p>
+                </div>
+              </div>
+              <button onClick={() => deleteComment(c.id)} className="text-muted-foreground hover:text-destructive transition-colors p-1">
+                <Trash2 className="w-4 h-4" />
+              </button>
+            </div>
+            <p className="text-sm text-muted-foreground leading-relaxed ml-11">{c.text}</p>
+          </motion.div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 function renderContent(content: string) {
   const lines = content.split('\n');
@@ -150,6 +241,9 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
               </Button>
             </Link>
           </motion.div>
+
+          {/* Yorumlar */}
+          <CommentSection slug={post.slug} />
 
           {/* Other Posts */}
           {otherPosts.length > 0 && (
