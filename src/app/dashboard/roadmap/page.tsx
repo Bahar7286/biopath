@@ -89,14 +89,70 @@ export default function RoadmapPage() {
     try {
       await new Promise(resolve => setTimeout(resolve, 1500));
 
-      const mockTasks: Task[] = [
-        { id: '1', title: 'Araştırma ve Planlama', description: 'Hedef gereksinimlerini anlayın ve eylem planı oluşturun', completed: false, priority: 'high', resources: ['Dev.to', 'Medium'] },
-        { id: '2', title: 'Temel Kurulum', description: 'Proje yapısını ve başlangıç kurulumunu oluşturun', completed: false, priority: 'high', resources: ['GitHub', 'Belgeler'] },
-        { id: '3', title: 'Temel Geliştirme', description: 'Ana özellikleri ve işlevselliği geliştirin', completed: false, priority: 'high', resources: ['Dokümantasyon', 'Eğitimler'] },
-        { id: '4', title: 'Test ve İyileştirme', description: 'İşlevselliği test edin ve geri bildirime göre iyileştirin', completed: false, priority: 'medium', resources: ['Test Kılavuzu'] },
-        { id: '5', title: 'Dokümantasyon', description: 'Kapsamlı belgeler oluşturun', completed: false, priority: 'medium', resources: ['Yazma Kılavuzu'] },
-        { id: '6', title: 'Yayınla ve Geliştir', description: 'Kullanıcılara yayınlayın ve iyileştirmeler için geri bildirim toplayın', completed: false, priority: 'low', resources: ['Yayın Kılavuzu'] },
-      ];
+      // Hedefe gore akilli gorev uretimi
+      const goal = formData.goal.toLowerCase();
+      const desc = formData.description.toLowerCase();
+      const timeframe = formData.timeframe;
+
+      // Hedef analizi - anahtar kelimelere gore kategorize et
+      const isWebDev = /web|frontend|backend|fullstack|react|next|vue|angular|node|express|django|flask/i.test(goal + desc);
+      const isMobileDev = /mobil|mobile|ios|android|flutter|react native|swift|kotlin/i.test(goal + desc);
+      const isDataScience = /veri|data|machine learning|ml|ai|yapay zeka|deep learning|python|analiz/i.test(goal + desc);
+      const isDesign = /tasarım|design|ui|ux|figma|adobe|grafik|graphic/i.test(goal + desc);
+      const isDevOps = /devops|docker|kubernetes|ci\/cd|cloud|aws|azure|deploy/i.test(goal + desc);
+      const isCareer = /kariyer|career|iş|job|staj|intern|freelance|girişim|startup/i.test(goal + desc);
+
+      let mockTasks: Task[];
+
+      if (isWebDev) {
+        mockTasks = [
+          { id: '1', title: 'HTML, CSS ve JavaScript Temellerini Pekiştir', description: 'Modern web standartlarını öğren: Semantic HTML5, Flexbox/Grid, ES6+ JavaScript. Her konuda mini projeler yap.', completed: false, priority: 'high', dueDate: timeframe === '1-month' ? '1. Hafta' : '1-2. Hafta', resources: ['MDN Web Docs', 'freeCodeCamp', 'JavaScript.info'] },
+          { id: '2', title: 'Framework Seç ve Öğren (React/Vue/Angular)', description: 'Bir frontend framework seç. Component yapısı, state management, routing öğren. 3 küçük proje yap.', completed: false, priority: 'high', dueDate: timeframe === '1-month' ? '2. Hafta' : '3-4. Hafta', resources: ['React.dev', 'Udemy', 'YouTube Türkçe Kurslar'] },
+          { id: '3', title: 'Backend Geliştirme (Node.js/Python)', description: 'REST API tasarımı, veritabanı entegrasyonu (PostgreSQL/MongoDB), authentication. CRUD uygulaması yap.', completed: false, priority: 'high', dueDate: timeframe === '1-month' ? '3. Hafta' : '5-6. Hafta', resources: ['Express.js Docs', 'Prisma ORM', 'Supabase'] },
+          { id: '4', title: 'Git, GitHub ve Versiyon Kontrolü', description: 'Branch stratejisi, PR workflow, code review. Open source projeye katkı sağla.', completed: false, priority: 'medium', dueDate: timeframe === '1-month' ? '3. Hafta' : '7. Hafta', resources: ['Git SCM Book', 'GitHub Guides'] },
+          { id: '5', title: 'Deployment ve DevOps Temelleri', description: 'Vercel/Netlify ile deploy, CI/CD pipeline, environment variables, domain bağlama.', completed: false, priority: 'medium', dueDate: timeframe === '1-month' ? '4. Hafta' : '8-9. Hafta', resources: ['Vercel Docs', 'Docker Başlangıç'] },
+          { id: '6', title: 'Portfolyo Projesi Geliştir', description: 'Tüm öğrendiklerini kullanarak tam kapsamlı bir portfolyo projesi oluştur. README, demo, canlı link hazırla.', completed: false, priority: 'high', dueDate: timeframe === '1-month' ? '4. Hafta' : '10-12. Hafta', resources: ['GitHub Portfolio Örnekleri', 'Dribbble'] },
+          { id: '7', title: 'Test Yazma ve Kod Kalitesi', description: 'Unit test (Jest/Vitest), integration test, ESLint/Prettier kurulumu. Test coverage hedefi koy.', completed: false, priority: 'low', dueDate: 'Sürekli', resources: ['Jest Docs', 'Testing Library'] },
+        ];
+      } else if (isDataScience) {
+        mockTasks = [
+          { id: '1', title: 'Python Programlama Temelleri', description: 'Python syntax, veri yapıları, fonksiyonlar, OOP. Jupyter Notebook kullanımı.', completed: false, priority: 'high', dueDate: '1-2. Hafta', resources: ['Python.org', 'Kaggle Learn'] },
+          { id: '2', title: 'Veri Analizi Kütüphaneleri (Pandas, NumPy)', description: 'Veri temizleme, dönüştürme, gruplama, birleştirme. Gerçek veri setleri ile pratik.', completed: false, priority: 'high', dueDate: '3-4. Hafta', resources: ['Pandas Docs', 'Kaggle Datasets'] },
+          { id: '3', title: 'Veri Görselleştirme (Matplotlib, Seaborn)', description: 'Grafik türleri, dashboard oluşturma, hikaye anlatımı ile veri sunumu.', completed: false, priority: 'high', dueDate: '5-6. Hafta', resources: ['Matplotlib Gallery', 'Seaborn Tutorial'] },
+          { id: '4', title: 'İstatistik ve Olasılık Temelleri', description: 'Tanımlayıcı istatistik, hipotez testi, korelasyon, regresyon analizi.', completed: false, priority: 'medium', dueDate: '7-8. Hafta', resources: ['Khan Academy', 'StatQuest YouTube'] },
+          { id: '5', title: 'Makine Öğrenmesi (Scikit-learn)', description: 'Supervised/Unsupervised learning, model seçimi, cross-validation, hyperparameter tuning.', completed: false, priority: 'high', dueDate: '9-12. Hafta', resources: ['Scikit-learn Docs', 'Coursera ML'] },
+          { id: '6', title: 'Proje: End-to-End ML Pipeline', description: 'Gerçek bir problemi çözen ML projesi. Veri toplama → EDA → Model → Deploy.', completed: false, priority: 'high', dueDate: '13-16. Hafta', resources: ['Kaggle Competitions', 'Streamlit'] },
+        ];
+      } else if (isDesign) {
+        mockTasks = [
+          { id: '1', title: 'Tasarım Prensipleri ve Teori', description: 'Renk teorisi, tipografi, boşluk, hiyerarşi, Gestalt prensipleri.', completed: false, priority: 'high', dueDate: '1-2. Hafta', resources: ['Refactoring UI', 'Design Course YouTube'] },
+          { id: '2', title: 'Figma ile UI Tasarımı', description: 'Component yapısı, auto layout, variants, prototyping. 5 farklı sayfa tasarla.', completed: false, priority: 'high', dueDate: '3-5. Hafta', resources: ['Figma Learn', 'Figma Community'] },
+          { id: '3', title: 'UX Araştırması ve Kullanıcı Testleri', description: 'Persona oluşturma, user flow, wireframing, A/B test planlama.', completed: false, priority: 'medium', dueDate: '6-8. Hafta', resources: ['NNGroup', 'UX Collective'] },
+          { id: '4', title: 'Design System Oluştur', description: 'Kendi design system/token setini oluştur. Tutarlı component library.', completed: false, priority: 'medium', dueDate: '9-10. Hafta', resources: ['Material Design', 'Tailwind UI'] },
+          { id: '5', title: 'Portfolyo ve Case Study Yaz', description: '3-5 case study hazırla. Problem → Süreç → Çözüm formatında.', completed: false, priority: 'high', dueDate: '11-12. Hafta', resources: ['Behance', 'Dribbble'] },
+        ];
+      } else if (isCareer) {
+        mockTasks = [
+          { id: '1', title: 'Hedef Pozisyon Analizi', description: 'İş ilanlarını incele, gereken becerileri listele, eksiklerini belirle.', completed: false, priority: 'high', dueDate: '1. Hafta', resources: ['LinkedIn Jobs', 'Glassdoor'] },
+          { id: '2', title: 'CV ve LinkedIn Profili Güncelle', description: 'ATS uyumlu CV hazırla, LinkedIn profilini optimize et, anahtar kelimeler ekle.', completed: false, priority: 'high', dueDate: '2. Hafta', resources: ['Resume.io', 'LinkedIn Learning'] },
+          { id: '3', title: 'Teknik Beceri Geliştirme', description: 'Eksik becerilerini tamamla. Online kurslar, pratik projeler, sertifikalar.', completed: false, priority: 'high', dueDate: '3-8. Hafta', resources: ['Udemy', 'Coursera', 'freeCodeCamp'] },
+          { id: '4', title: 'Networking ve Topluluk', description: 'Meetuplara katıl, Twitter/LinkedIn aktif kullan, mentör bul.', completed: false, priority: 'medium', dueDate: 'Sürekli', resources: ['Meetup.com', 'Dev.to'] },
+          { id: '5', title: 'Mülakat Hazırlığı', description: 'Algoritma pratikleri, sistem tasarımı, davranışsal sorular hazırlığı.', completed: false, priority: 'high', dueDate: '9-12. Hafta', resources: ['LeetCode', 'NeetCode', 'Pramp'] },
+          { id: '6', title: 'Başvuru ve Takip', description: 'Haftada 5-10 başvuru yap, takip et, her mülakatı değerlendir.', completed: false, priority: 'medium', dueDate: 'Sürekli', resources: ['Huntr', 'Notion Template'] },
+        ];
+      } else {
+        // Genel hedef icin akilli gorev uretimi
+        const goalWords = formData.goal.split(' ').filter(w => w.length > 3);
+        mockTasks = [
+          { id: '1', title: `${formData.goal} - Araştırma ve Kaynak Toplama`, description: `"${formData.goal}" konusunda kapsamlı araştırma yap. En iyi kaynakları, kursları ve kitapları belirle. Bir öğrenme planı oluştur.`, completed: false, priority: 'high', dueDate: '1. Hafta', resources: ['Google Scholar', 'YouTube', 'Udemy'] },
+          { id: '2', title: 'Temel Kavramları Öğren', description: `${formData.goal} ile ilgili temel terminolojiyi ve kavramları öğren. Not al ve özet çıkar.`, completed: false, priority: 'high', dueDate: '2-3. Hafta', resources: ['Wikipedia', 'Konu ile ilgili bloglar'] },
+          { id: '3', title: 'Pratik Uygulama Başlat', description: `Öğrendiklerini küçük projelerle uygula. Her hafta en az 1 pratik çalışma yap.`, completed: false, priority: 'high', dueDate: '4-6. Hafta', resources: ['GitHub', 'Kişisel Projeler'] },
+          { id: '4', title: 'Toplulukla Etkileşim', description: `${formData.goal} ile ilgili topluluklara katıl. Sorular sor, deneyimlerini paylaş.`, completed: false, priority: 'medium', dueDate: 'Sürekli', resources: ['Reddit', 'Discord', 'Twitter'] },
+          { id: '5', title: 'İleri Düzey Konulara Geç', description: `Temelleri oturttuktana sonra ileri düzey konulara geç. Zorluk seviyeni artır.`, completed: false, priority: 'medium', dueDate: '7-10. Hafta', resources: ['İleri düzey kurslar', 'Kitaplar'] },
+          { id: '6', title: 'Portfolyo/Showcase Projesi', description: `Tüm öğrendiklerini gösteren kapsamlı bir proje oluştur. Dokümante et ve paylaş.`, completed: false, priority: 'high', dueDate: '11-12. Hafta', resources: ['GitHub', 'Blog yazısı'] },
+          { id: '7', title: 'Değerlendirme ve Sonraki Adımlar', description: `İlerlemeyi değerlendir. Eksikleri belirle, sonraki hedefleri planla.`, completed: false, priority: 'low', dueDate: 'Son Hafta', resources: ['Öz değerlendirme', 'Mentor görüşmesi'] },
+        ];
+      }
 
       const newRoadmap: Roadmap = {
         id: Date.now().toString(),

@@ -60,11 +60,35 @@ export default function AiBioPage() {
     setIsLoading(true);
 
     try {
-      const mockBios = [
-        `${formData.experience} deneyime sahip tutkulu bir ${formData.profession}. Yenilikçi çözümler üretme konusunda uzmanlaşmış.${formData.skills ? ` ${formData.skills} alanlarında uzmanlık.` : ''}`,
-        `Mükemmelliğe ve sürekli gelişime adanmış deneyimli bir ${formData.profession}.${formData.skills ? ` ${formData.skills} konusunda güçlü bir altyapıya sahip.` : ''} Yeni zorluklarla yüzleşmeye her zaman hazır.`,
-        `Teknik uzmanlığı stratejik düşünceyle birleştiren yaratıcı bir ${formData.profession}.${formData.skills ? ` ${formData.skills} konusunda yetkin.` : ''} Olağanüstü sonuçlar üretme konusunda tutkulu.`,
+      const skillsList = formData.skills ? formData.skills.split(',').map(s => s.trim()).filter(Boolean) : [];
+      const skillsText = skillsList.length > 0 ? skillsList.join(', ') : '';
+      const topSkills = skillsList.slice(0, 3).join(', ');
+
+      const professionalBios = [
+        `${formData.experience} deneyime sahip ${formData.profession} olarak, ${skillsText || 'yazılım geliştirme'} alanlarında kapsamlı uzmanlığa sahibim. Karmaşık teknik zorlukları zarif ve ölçeklenebilir çözümlere dönüştürme konusunda kanıtlanmış bir geçmişe sahibim. Ekip liderliği, kod kalitesi ve sürekli iyileştirme prensiplerine bağlıyım.`,
+        `Sonuç odaklı ${formData.profession} | ${formData.experience} deneyim. ${topSkills || 'Modern teknolojiler'} konusunda derin uzmanlık. Startup'lardan enterprise projelere kadar geniş bir yelpazede başarılı teslimatlar gerçekleştirdim. Temiz kod, test edilebilirlik ve kullanıcı deneyimi benim önceliklerim.`,
+        `${formData.profession} olarak ${formData.experience} boyunca ${skillsText || 'çeşitli teknolojilerle'} çalıştım. Açık kaynak topluluğuna aktif katkı sağlıyor, teknik blog yazıları paylaşıyor ve ekip mentorlüğü yapıyorum. Her projede en iyi mühendislik pratiklerini uygulamayı hedefliyorum.`,
       ];
+
+      const casualBios = [
+        `Hey! Ben ${formData.experience} tecrübeli bir ${formData.profession}. ${topSkills || 'Kod yazmak'} benim tutkum. Kahve eşliğinde bug çözmekten, yeni teknolojiler keşfetmekten ve topluluk etkinliklerine katılmaktan keyif alıyorum. Şu an bir sonraki büyük projemi planlıyorum!`,
+        `${formData.profession} | ${skillsText || 'Teknoloji meraklısı'}. ${formData.experience} boyunca onlarca projeye hayat verdim. İşimi severek yapan, takım çalışmasına inanan ve her gün yeni bir şey öğrenmeye çalışan biriyim. Hadi birlikte harika bir şeyler inşa edelim!`,
+        `Merhaba! ${formData.experience} boyunca ${formData.profession.toLowerCase()} olarak çalışıyorum. ${topSkills || 'Web teknolojileri'} benim alanım. Projeleri sadece çalışır hale getirmekle kalmıyor, kullanıcıların gerçekten sevdiği ürünler ortaya koyuyorum. Portfolyoma göz atın!`,
+      ];
+
+      const creativeBios = [
+        `Dijital dünyada ${formData.experience} yolculuk yapan bir ${formData.profession}. ${skillsText || 'Kod'} benim tuvalim, her proje yeni bir başyapıt. Piksel mükemmelliği ile performans arasındaki dengeyi bulmak benim süper gücüm. Kodlarım konuşur, projelerim ilham verir.`,
+        `${formData.profession} | Dijital Zanaatkar | ${formData.experience} deneyim. ${topSkills || 'Teknoloji'} ile sanat arasında köprü kuruyorum. Her satır kodda bir hikaye, her projede bir vizyon var. İnovasyon sadece yeni bir şey yapmak değil, daha iyi yapmak demek.`,
+        `Bir ${formData.profession} olarak ${formData.experience} boyunca gördüğüm en büyük gerçek: En iyi kod, kullanıcının fark etmediği koddur. ${skillsText || 'Modern araçlarla'} görünmez ama güçlü deneyimler yaratıyorum. Basitlik, karmaşıklığın en üst seviyesidir.`,
+      ];
+
+      const toneMap: Record<string, string[]> = {
+        professional: professionalBios,
+        casual: casualBios,
+        creative: creativeBios,
+      };
+
+      const mockBios = toneMap[formData.tone] || professionalBios;
 
       await new Promise(resolve => setTimeout(resolve, 1500));
 
@@ -242,9 +266,16 @@ export default function AiBioPage() {
                       <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        onClick={() => {
-                          // Biyografiyi profil verisine ekle
+                        onClick={async () => {
+                          // Biyografiyi direkt profildeki bio alanina yaz
                           try {
+                            // 1. Supabase'de guncelle
+                            const { supabase } = await import('@/lib/supabase');
+                            const { data: { user } } = await supabase.auth.getUser();
+                            if (user) {
+                              await supabase.from('profiles').update({ bio: bio.text }).eq('user_id', user.id);
+                            }
+                            // 2. localStorage'da da guncelle (yedek)
                             const saved = localStorage.getItem('biopath_profile');
                             const profile = saved ? JSON.parse(saved) : {};
                             profile.bio = bio.text;
@@ -253,8 +284,18 @@ export default function AiBioPage() {
                               profile.bio_variants.push(bio.text);
                             }
                             localStorage.setItem('biopath_profile', JSON.stringify(profile));
-                            handleCopy(bio.text, bio.id);
-                          } catch { handleCopy(bio.text, bio.id); }
+                            // Basari bildirimi
+                            setCopiedId(bio.id);
+                            setTimeout(() => setCopiedId(null), 2000);
+                            alert('Biyografiniz guncellendi! Profil sayfanizda gorebilirsiniz.');
+                          } catch {
+                            // Supabase yoksa sadece localStorage
+                            const saved = localStorage.getItem('biopath_profile');
+                            const profile = saved ? JSON.parse(saved) : {};
+                            profile.bio = bio.text;
+                            localStorage.setItem('biopath_profile', JSON.stringify(profile));
+                            alert('Biyografiniz guncellendi!');
+                          }
                         }}
                         className="flex items-center gap-2 px-4 py-2 rounded-lg bg-accent/10 hover:bg-accent/20 text-accent text-sm font-medium transition-colors"
                       >

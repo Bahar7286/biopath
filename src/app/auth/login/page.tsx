@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'motion/react';
 import { Button } from '@/components/ui/button';
@@ -11,11 +11,24 @@ import { Mail, Lock, ArrowRight, Sparkles, ChevronLeft } from 'lucide-react';
 import { Footer } from '@/components/footer';
 import { supabase } from '@/lib/supabase';
 
-export default function LoginPage() {
+function LoginContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [formData, setFormData] = useState({ email: '', password: '' });
+  const [resetSuccess, setResetSuccess] = useState(false);
+
+  useEffect(() => {
+    const emailParam = searchParams.get('email');
+    const resetParam = searchParams.get('reset');
+    if (emailParam) {
+      setFormData(prev => ({ ...prev, email: decodeURIComponent(emailParam) }));
+    }
+    if (resetParam === 'true') {
+      setResetSuccess(true);
+    }
+  }, [searchParams]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -107,6 +120,13 @@ export default function LoginPage() {
               </div>
             </div>
 
+            {resetSuccess && (
+              <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
+                className="p-4 rounded-lg bg-green-500/10 border border-green-500/50 text-green-700 dark:text-green-400 text-sm">
+                Sifre sifirlama baglantisi e-postaniza gonderildi. Yeni sifrenizle giris yapabilirsiniz.
+              </motion.div>
+            )}
+
             {error && (
               <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
                 className="p-4 rounded-lg bg-destructive/10 border border-destructive/50 text-destructive text-sm">
@@ -152,5 +172,13 @@ export default function LoginPage() {
       </div>
       <Footer />
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-background flex items-center justify-center"><div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" /></div>}>
+      <LoginContent />
+    </Suspense>
   );
 }

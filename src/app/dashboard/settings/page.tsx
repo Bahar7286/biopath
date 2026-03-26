@@ -54,19 +54,39 @@ export default function SettingsPage() {
     }
   }, []);
 
-  // Renk teması seçildiğinde CSS'e uygula
+  // Hex to oklch approximation helper
+  const hexToOklch = (hex: string): string => {
+    const r = parseInt(hex.slice(1, 3), 16) / 255;
+    const g = parseInt(hex.slice(3, 5), 16) / 255;
+    const b = parseInt(hex.slice(5, 7), 16) / 255;
+    // Simple luminance calc
+    const l = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    const lightness = Math.pow(l, 0.43) * 0.85 + 0.15;
+    const max = Math.max(r, g, b), min = Math.min(r, g, b);
+    const chroma = (max - min) * 0.2;
+    const hue = max === min ? 0 : max === r ? ((g - b) / (max - min)) * 60 : max === g ? ((b - r) / (max - min)) * 60 + 120 : ((r - g) / (max - min)) * 60 + 240;
+    return `oklch(${lightness.toFixed(4)} ${chroma.toFixed(4)} ${((hue + 360) % 360).toFixed(1)})`;
+  };
+
+  // Renk teması seçildiğinde GERÇEK CSS değişkenlerini güncelle
   const applyColorTheme = (themeOption: Theme) => {
     setSelectedTheme(themeOption.id);
-    // CSS custom properties olarak uygula
-    document.documentElement.style.setProperty('--color-primary', themeOption.colors.primary);
-    document.documentElement.style.setProperty('--color-secondary', themeOption.colors.secondary);
-    document.documentElement.style.setProperty('--color-accent', themeOption.colors.accent);
+    const root = document.documentElement;
+    const { primary, secondary, accent } = themeOption.colors;
+
+    // Ana tema değişkenlerini güncelle (Tailwind/shadcn bunları kullanıyor)
+    root.style.setProperty('--primary', hexToOklch(primary));
+    root.style.setProperty('--ring', hexToOklch(primary));
+    root.style.setProperty('--accent', hexToOklch(accent));
+    root.style.setProperty('--chart-1', hexToOklch(primary));
+    root.style.setProperty('--chart-5', hexToOklch(accent));
+    root.style.setProperty('--sidebar-primary', hexToOklch(primary));
+    root.style.setProperty('--sidebar-accent', hexToOklch(accent));
+
     // localStorage'a kaydet
     localStorage.setItem('biopath_color_theme', JSON.stringify({
       id: themeOption.id,
-      primary: themeOption.colors.primary,
-      secondary: themeOption.colors.secondary,
-      accent: themeOption.colors.accent,
+      primary, secondary, accent,
     }));
   };
 
@@ -79,27 +99,47 @@ export default function SettingsPage() {
 
   const THEME_LABELS: Record<string, string> = { light: 'Açık', dark: 'Koyu', system: 'Sistem' };
 
-  const demoProfile = {
-    fullName: 'Kullanıcı Adı',
-    bio: 'Profesyonel bio metni',
-    location: '',
-    website: '',
-    email: '',
-    username: profileUrl || 'kullanici',
-    socialLinks: [],
-    repositories: [],
-    bio_variants: [],
-    stats: { profileViews: 0, linkClicks: 0, shares: 0 },
+  // Gercek profil verisini oku
+  const getProfileData = async () => {
+    try {
+      const { supabase } = await import('@/lib/supabase');
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data: profile } = await supabase.from('profiles').select('*').eq('user_id', user.id).single();
+        if (profile) {
+          return {
+            fullName: profile.full_name || 'Kullanici',
+            bio: profile.bio || '',
+            location: profile.location || '',
+            website: profile.website || '',
+            email: user.email || '',
+            username: profile.username || profileUrl || 'kullanici',
+            repositories: (profile.repositories || []).map((r: any) => ({ name: r.name, url: r.url, description: r.description })),
+          };
+        }
+      }
+    } catch { /* fallback */ }
+    // Fallback: localStorage'dan oku
+    try {
+      const saved = localStorage.getItem('biopath_profile');
+      if (saved) {
+        const p = JSON.parse(saved);
+        return { fullName: p.fullName || 'Kullanici', bio: p.bio || '', location: p.location || '', website: p.website || '', email: p.email || '', username: profileUrl || 'kullanici', repositories: [] };
+      }
+    } catch { /* ignore */ }
+    return { fullName: 'Kullanici Adi', bio: 'BioPath Pro kullanicisi', location: '', website: '', email: '', username: profileUrl || 'kullanici', repositories: [] };
   };
 
   const handleExportPDF = async () => {
     const { exportToPDF } = await import('@/lib/export');
-    await exportToPDF(demoProfile, 'profil.pdf');
+    const profileData = await getProfileData();
+    await exportToPDF(profileData, `${profileData.fullName.replace(/\s+/g, '-')}-profil.pdf`);
   };
 
   const handleExportVCF = async () => {
     const { exportToVCF } = await import('@/lib/export');
-    exportToVCF(demoProfile, 'profil.vcf');
+    const profileData = await getProfileData();
+    exportToVCF(profileData, `${profileData.fullName.replace(/\s+/g, '-')}.vcf`);
   };
 
   const handleShareLink = () => {
@@ -250,6 +290,51 @@ export default function SettingsPage() {
               </div>
             </div>
 
+            {/* QR Kod */}
+            <Card className="p-6 border-border/50">
+              <h3 className="font-semibold mb-4 flex items-center gap-2">
+                <Share2 className="w-5 h-5" />
+                Profil QR Kodu
+              </h3>
+              <p className="text-sm text-muted-foreground mb-4">
+                Bu QR kodu profilinize yonlendirir. Profil bilgileriniz degistikce otomatik guncellenir.
+              </p>
+              <div className="flex flex-col items-center gap-4">
+                <div className="p-4 bg-white rounded-xl border border-border/50">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(
+                      `${baseUrl || 'https://biopathpro.com'}/profile/${profileUrl || 'kullanici-adi'}`
+                    )}&color=5800d4`}
+                    alt="Profil QR Kodu"
+                    width={200}
+                    height={200}
+                    className="rounded"
+                  />
+                </div>
+                <p className="text-xs text-muted-foreground text-center break-all max-w-[250px]">
+                  {baseUrl || 'https://biopathpro.com'}/profile/{profileUrl || 'kullanici-adi'}
+                </p>
+                <div className="flex gap-2">
+                  <Button size="sm" variant="outline" className="border-border/50"
+                    onClick={() => {
+                      const url = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${encodeURIComponent(`${baseUrl || 'https://biopathpro.com'}/profile/${profileUrl || 'kullanici-adi'}`)}&color=5800d4`;
+                      const a = document.createElement('a');
+                      a.href = url;
+                      a.download = 'biopath-qr.png';
+                      a.target = '_blank';
+                      a.click();
+                    }}>
+                    <Download className="w-4 h-4 mr-2" />QR İndir
+                  </Button>
+                  <Button size="sm" variant="outline" className="border-border/50" onClick={handleCopyUrl}>
+                    {copied ? <><CheckCircle2 className="w-4 h-4 mr-2" />Kopyalandı!</> : <><Copy className="w-4 h-4 mr-2" />Link Kopyala</>}
+                  </Button>
+                </div>
+              </div>
+            </Card>
+
+            {/* Disa Aktar */}
             <Card className="p-6 border-border/50">
               <h3 className="font-semibold mb-4 flex items-center gap-2">
                 <Download className="w-5 h-5" />

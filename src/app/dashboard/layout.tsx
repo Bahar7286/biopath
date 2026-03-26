@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ThemeSwitcher } from '@/components/theme-switcher';
+import { Footer } from '@/components/footer';
 
 const navigationItems = [
   { label: 'Genel Bakış', href: '/dashboard', icon: LayoutDashboard },
@@ -179,14 +180,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       </AnimatePresence>
 
       {/* Main Content */}
-      <main className="lg:pl-64 pt-16 min-h-screen">
+      <main className="lg:pl-64 pt-16 min-h-screen flex flex-col">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
+          className="flex-1"
         >
           {children}
         </motion.div>
+        <Footer />
       </main>
     </div>
   );
